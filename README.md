@@ -36,6 +36,8 @@ Discord: joaowars776
 
 🔹Backup: You can export and import your data (current chapter, configuration, everything)
 
+🔹Offline and Portable: Of course, this is 100% offline and portable. You can download Firefox Portable and Download the Translation you want. If you format your PC, you'll have your cache data saved on Firefox Portable (if you save it on PenDrive, or some partition you created/have around C:/ one you formated. Just need to use the commands below and open the website for the first time to have it 100% portable
+
 ## ⚙️ How to Run It
 
 Make sure you have NodeJS installed. (https://nodejs.org/en)
