@@ -12,6 +12,17 @@ So I built this site
 
 Need help with setup? Feel free to send message to me on Discord: joaowars776. I’ll gladly assist — especially if you’re new to this kind of setup and found this repository through keywords like light novel, Wuxia, or Xianxia. I'm a private server youtuber, I help around 10 to 20 peoples per month nowadays (https://youtube.com/joaowars776), it's not bothering, and I'll not request you money, just ask me, trust bro.
 
+What it have?:
+🔹Interface languages: Portuguese, Chinese, English, French, Japanese, Spanish, German and Russian (Default: Automatic)
+🔹Multiple visual themes: Choose your themes that are ideal for reading in light, dark, nighttime, or eye protection environments.
+🔹Text control: Adjust font size, change typeface, enable full-screen reading mode (with stretched text), normal mode, or mobile-optimized mode.
+🔹Customizable interface: Options such as auto-hiding elements for more immersive reading.
+🔹Bookmark system: Mark chapters as favorites with one click (quick save option enabled on configuration) or assign custom names to the bookmark.
+🔹Scroll button: Quickly jump to the beginning or end of the page. Can be turned on or off as desired (default is off).
+🔹Read aloud (experimental): Text-to-speech feature — functional but with limited comprehension at the moment (trash asf to be honest, atleast to me).
+🔹Auto-save progress: All settings and the current chapter are cached locally in browser. You can turn off your computer and come back days later — when you open the website, it will load exactly where you left off.
+🔹Backup: You can export and import your data (current chapter, configuration, everything)
+
 ⚙️ How to Run It
 Make sure you have NodeJS installed. (https://nodejs.org/en)
 Open a terminal (CMD) in root folder (epub-reader folder, download the zip, unpack on some folder, open and open CMD there).
