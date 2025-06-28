@@ -5,10 +5,10 @@ Why did I create this? Simple: because of my love for webnovels/light novels. (W
 
 When LightNovelPub shut down due to copyright issues, I realized how fragile access to these stories can be if NovelFull broken (I'll not pay, sorry WuxiaWorld).
 
-Fortunately, tools like a Chrome extension that converts full novels from sites like NovelFull into EPUBs still exist.
-And As someone who has nearly 8GB of light novels archived, looks good to have a really good EPub Reader with the functions ME, MYSELF, want in a website, around anothers functions that maybe someone use
+Fortunately, tools like a Chrome extension that converts full novels from sites like NovelFull into ePUBs still exist.
+And As someone who has nearly 8GB of light novels archived, looks good to have a really good ePUB Reader with the functions ME, MYSELF, want in a website, around anothers functions that maybe someone use
 
-Why Web? Because Firefox has Offline Automatic Translation, and Chrome has Translation too, so, you can read any light novel with Epub-Webs, because you can automatically translate (8GB epubs in English, I use Chrome Extension to en>ptbr, I can read everything in portuguese without difficults, just if the english translation of webnovel is trash, if it's good, will be pretty good in portuguese too)
+Why Web? Because Firefox has Offline Automatic Translation, and Chrome has Translation too, so, you can read any light novel with ePUB-Webs, because you can automatically translate (8GB ePUBS in English, I use Chrome Extension to en>ptbr, I can read everything in portuguese without difficults, just if the english translation of webnovel is trash, if it's good, will be pretty good in portuguese too)
 
 So I built this site
 
@@ -46,7 +46,7 @@ Discord: joaowars776
 
 Make sure you have NodeJS installed. (https://nodejs.org/en)
 
-Open a terminal (CMD) in root folder (epub-reader folder, download the zip, unpack on some folder, open and open CMD there).
+Open a terminal (CMD) in root folder (ePUB-Reader folder, download the zip, unpack on some folder, open and open CMD there).
 
 Run the following commands, in this order:
 
@@ -61,7 +61,7 @@ https://github.com/user-attachments/assets/3b10f997-150f-4805-8c6d-6b67d11bd292
 
 ## Want to run this website on your phone?
 
-Open CMD in root folder (epub-reader folder), in this order:
+Open CMD in root folder (ePUB-Reader folder), in this order:
 
 ### <pre>npm install -g serve</pre>
 ### <pre>serve -s dist</pre>
@@ -75,6 +75,6 @@ Copy the IP shown under ```-Network```
 paste it into your phone's browser, and you’ll be able to access the website perfectly.
 Note: Make sure your phone and computer are connected to the same Wi-Fi network.
 
-If you're a fan of Wuxia, Xianxia, or similar light novels, feel free to message me — I have around 7.4GB of novels in EPUB, PDF, and HTML formats.
+If you're a fan of Wuxia, Xianxia, or similar light novels, feel free to message me — I have around 7.4GB of novels in ePUB, PDF, and HTML formats.
 
 Discord: joaowars776
