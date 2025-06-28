@@ -1,4 +1,4 @@
-## WUXIA / XIANXIA READERS, THIS IS FOR YOU'ALL (OF COURSE, WORK WITH ANY EPUB, 100%
+## WUXIA / XIANXIA READERS, THIS IS FOR YOU'ALL (WORK WITH ANY EPUB, OF ANY SUBJECT)
 
 I've created this project in bolt.new.
 Why did I create this? Simple: because of my love for webnovels/light novels. (Wuxia, Xianxia, Xuanhuan, and similars)
