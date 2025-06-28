@@ -40,7 +40,7 @@ Discord: joaowars776
 
 🔹Offline and Portable: Of course, this is 100% offline and portable. You can download Firefox Portable and Download the Translation you want. If you format your PC, you'll have your cache data saved on Firefox Portable (if you save it on PenDrive, or some partition you created/have around C:/ one you formated. Just need to use the commands below and open the website for the first time to have it 100% portable
 
-🔹Browser Project: What this mean? Means that you can use Automatic Translation from Chrome, Firefox (have Offline Translation) and all other browser, you can read any chinese .epub in your language here thanks to that
+🔹Browser Project: What this mean? Means that you can use Automatic Translation from Chrome, Firefox (have Offline Translation) and all other browser, you can read any chinese, spanish, french or any language in this world .epub in your original language for example, thanks to that
 
 ## ⚙️ How to Run It
 
