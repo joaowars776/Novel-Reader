@@ -12,7 +12,7 @@ So I built this site
 
 Need help with setup? Feel free to send message to me on Discord: joaowars776. I’ll gladly assist — especially if you’re new to this kind of setup and found this repository through keywords like light novel, Wuxia, or Xianxia. I'm a private server youtuber, I help around 10 to 20 peoples per month nowadays (https://youtube.com/joaowars776), it's not bothering, and I'll not request you money, just ask me, trust bro.
 
-What it have?:
+## What it have?:
 
 🔹Interface languages: Portuguese, Chinese, English, French, Japanese, Spanish, German and Russian (Default: Automatic)
 
@@ -32,7 +32,7 @@ What it have?:
 
 🔹Backup: You can export and import your data (current chapter, configuration, everything)
 
-⚙️ How to Run It
+## ⚙️ How to Run It
 
 Make sure you have NodeJS installed. (https://nodejs.org/en)
 
@@ -40,8 +40,8 @@ Open a terminal (CMD) in root folder (epub-reader folder, download the zip, unpa
 
 Run the following commands, in this order:
 
-<pre>npm install</pre>
-<pre>npm run dev</pre>
+### <pre>npm install</pre>
+### <pre>npm run dev</pre>
 
 That's it! Your site will launch — fully functional, just like the preview below.
 
@@ -49,12 +49,12 @@ The link to access this website is something like: http://localhost:5173/
 
 https://github.com/user-attachments/assets/3b10f997-150f-4805-8c6d-6b67d11bd292
 
-Want to run this website on your phone?
+## Want to run this website on your phone?
 
 Open CMD in root folder (epub-reader folder), in this order:
 
-<pre>npm install -g serve</pre>
-<pre>serve -s dist</pre>
+### <pre>npm install -g serve</pre>
+### <pre>serve -s dist</pre>
 
 And something like this will open:
 
