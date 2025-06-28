@@ -6,6 +6,8 @@ When LightNovelPub shut down due to copyright issues, I realized how fragile acc
 Fortunately, tools like a Chrome extension that converts full novels from sites like NovelFull into EPUBs still exist.
 And As someone who has nearly 8GB of light novels archived, looks good to have a really good EPub Reader with the functions ME, MYSELF, want in a website, around anothers functions that maybe someone use
 
+Why Web? Because Firefox has Offline Automatic Translation, and Chrome has Translation too, so, you can read any light novel with Epub-Webs, because you can automatically translate (8GB epubs in English, I use Chrome Extension to en>ptbr, I can read everything in portuguese without difficults, just if the english translation of webnovel is trash, if it's good, will be pretty good in portuguese too)
+
 So I built this site
 
 Need help with setup? Feel free to send message to me on Discord: joaowars776. I’ll gladly assist — especially if you’re new to this kind of setup and found this repository through keywords like light novel, Wuxia, or Xianxia. I'm a private server youtuber, I help around 10 to 20 peoples per month nowadays (https://youtube.com/joaowars776), it's not bothering, and I'll not request you money, just ask me, trust bro.
