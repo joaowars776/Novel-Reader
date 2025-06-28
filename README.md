@@ -33,7 +33,9 @@ What it have?:
 🔹Backup: You can export and import your data (current chapter, configuration, everything)
 
 ⚙️ How to Run It
+
 Make sure you have NodeJS installed. (https://nodejs.org/en)
+
 Open a terminal (CMD) in root folder (epub-reader folder, download the zip, unpack on some folder, open and open CMD there).
 
 Run the following commands, in this order:
@@ -61,6 +63,7 @@ And something like this will open:
 Copy the ```- Network```
 
 Put on your phone and you can access the website perfectly
+
 Note: Necessary same Internet in this situation
 
 Note: If you're a fan of Wuxia/Xianxia and anothers similars light novels, send me a message, I have around 7.4GB of light novels epub/pdf/.html
