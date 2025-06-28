@@ -3,7 +3,7 @@
 I've created this project in bolt.new.
 Why did I create this? Simple: because of my love for webnovels/light novels. (Wuxia, Xianxia, Xuanhuan, and similars)
 
-When LightNovelPub shut down due to copyright issues, I realized how fragile access to these stories can be (I'll not pay, sorry WuxiaWorld).
+When LightNovelPub shut down due to copyright issues, I realized how fragile access to these stories can be if NovelFull broken (I'll not pay, sorry WuxiaWorld).
 
 Fortunately, tools like a Chrome extension that converts full novels from sites like NovelFull into EPUBs still exist.
 And As someone who has nearly 8GB of light novels archived, looks good to have a really good EPub Reader with the functions ME, MYSELF, want in a website, around anothers functions that maybe someone use
