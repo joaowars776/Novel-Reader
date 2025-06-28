@@ -10,7 +10,11 @@ Why Web? Because Firefox has Offline Automatic Translation, and Chrome has Trans
 
 So I built this site
 
-Need help with setup? Feel free to send message to me on Discord: joaowars776. I’ll gladly assist — especially if you’re new to this kind of setup and found this repository through keywords like light novel, Wuxia, or Xianxia. I'm a private server youtuber, I help around 10 to 20 peoples per month nowadays (https://youtube.com/joaowars776), it's not bothering, and I'll not request you money, just ask me, trust bro.
+Need help with setup? Feel free to send message to me on Discord: joaowars776. I’ll gladly assist
+
+#### I'm a private server youtuber (i create tutorials), I help around 10 to 20 peoples per month nowadays (https://youtube.com/joaowars776), so it's not bothering to ask me something, and I'll not request you money, just ask me if you need help, trust bro.
+
+Discord: joaowars776
 
 ## What it have?:
 
@@ -60,12 +64,11 @@ And something like this will open:
 
 ![{0ACCEFCF-249E-4AFB-9316-C4FFF4641C73}](https://github.com/user-attachments/assets/81bd814e-d28d-4a44-b7e6-da5eea06914a)
 
-Copy the ```- Network```
+Copy the IP shown under ```-Network```
 
-Put on your phone and you can access the website perfectly
+paste it into your phone's browser, and you’ll be able to access the website perfectly.
+Note: Make sure your phone and computer are connected to the same Wi-Fi network.
 
-Note: Necessary same Internet in this situation
-
-Note: If you're a fan of Wuxia/Xianxia and anothers similars light novels, send me a message, I have around 7.4GB of light novels epub/pdf/.html
+If you're a fan of Wuxia, Xianxia, or similar light novels, feel free to message me — I have around 7.4GB of novels in EPUB, PDF, and HTML formats.
 
 Discord: joaowars776
