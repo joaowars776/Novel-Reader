@@ -36,7 +36,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onClose }) =
   return (
     <div 
       ref={selectorRef}
-      className="bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-48 animate-fade-in"
+      className="w-full"
     >
       <div className="px-4 py-2 border-b border-gray-100">
         <h3 className="text-sm font-medium text-gray-900">{getTranslation('language')}</h3>
@@ -47,7 +47,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onClose }) =
           <button
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
-            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
+            className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 hover:bg-opacity-20 transition-colors duration-200 flex items-center justify-between rounded-lg mx-1"
           >
             <span className="text-gray-900">{language.name}</span>
             {currentLanguage === language.code && (

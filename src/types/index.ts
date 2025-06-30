@@ -127,7 +127,7 @@ export interface CustomTheme {
   accent: string;
 }
 
-export type ThemePreset = 'light' | 'sepia' | 'dark' | 'high-contrast';
+export type ThemePreset = 'light' | 'sepia' | 'dark' | 'High Contrast';
 
 export interface Bookmark {
   id: string;
@@ -156,3 +156,70 @@ export interface SearchResult {
   matchStart: number;
   matchEnd: number;
 }
+
+// New Reading History Types
+export interface ReadingSession {
+  id: string;
+  bookId: string;
+  bookTitle: string;
+  bookAuthor: string;
+  chapterIndex: number;
+  chapterTitle: string;
+  startTime: Date;
+  endTime: Date;
+  duration: number; // in milliseconds
+  wordsRead?: number;
+  completed: boolean;
+}
+
+export interface ChapterHistory {
+  bookId: string;
+  bookTitle: string;
+  bookAuthor: string;
+  chapterIndex: number;
+  chapterTitle: string;
+  totalTime: number; // in milliseconds
+  firstRead: Date;
+  lastRead: Date;
+  timesRead: number;
+  completed: boolean;
+}
+
+export interface BookHistory {
+  bookId: string;
+  bookTitle: string;
+  bookAuthor: string;
+  totalTime: number; // in milliseconds
+  firstRead: Date;
+  lastRead: Date;
+  chaptersRead: number;
+  totalChapters: number;
+  completionPercentage: number;
+  sessions: ReadingSession[];
+}
+
+export interface ReadingTrend {
+  date: string; // YYYY-MM-DD format
+  totalTime: number; // in milliseconds
+  sessionsCount: number;
+  booksRead: string[]; // book IDs
+  chaptersCompleted: number;
+}
+
+export interface ReadingHistoryStats {
+  totalReadingTime: number; // in milliseconds
+  totalChaptersCompleted: number;
+  totalBooksStarted: number;
+  totalBooksCompleted: number;
+  averageSessionDuration: number; // in milliseconds
+  longestSession: number; // in milliseconds
+  currentStreak: number; // days
+  longestStreak: number; // days
+  dailyAverage: number; // in milliseconds
+  weeklyAverage: number; // in milliseconds
+  monthlyAverage: number; // in milliseconds
+}
+
+export type TimeFormat = 'auto' | 'minutes' | 'hours' | 'detailed';
+export type SortOption = 'date' | 'duration' | 'book' | 'chapter';
+export type FilterOption = 'all' | 'completed' | 'in-progress' | 'today' | 'week' | 'month';

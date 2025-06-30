@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { Upload, BookOpen, X, Globe } from 'lucide-react';
 import { createBookFromFile, EpubParser } from '../utils/epub-parser';
 import { saveBook, saveCoverImage } from '../utils/storage';
 import { LanguageSelector } from './LanguageSelector';
 import { getTranslation } from '../utils/translations';
+import { useDragDropController } from '../hooks/useDragDropController';
 import type { Book } from '../types';
 
 interface BookUploaderProps {
@@ -16,6 +17,21 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
+
+  // Initialize drag drop controller with custom config for this component
+  const { enableDragForElement, disableDragForElement } = useDragDropController({
+    enableDragOverlay: false,
+    allowedFileTypes: ['.epub'],
+    preventDefaultDragBehavior: true
+  });
+
+  // Enable drag and drop for the drop zone
+  useEffect(() => {
+    if (dropZoneRef.current) {
+      enableDragForElement(dropZoneRef.current);
+    }
+  }, [enableDragForElement]);
 
   const processFile = useCallback(async (file: File) => {
     if (!file.name.toLowerCase().endsWith('.epub')) {
@@ -58,6 +74,7 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragOver(false);
 
     const files = Array.from(e.dataTransfer?.files || []);
@@ -79,12 +96,28 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragOver(true);
   }, []);
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    setIsDragOver(false);
+    e.stopPropagation();
+    
+    // Only set drag over to false if we're leaving the drop zone entirely
+    const rect = dropZoneRef.current?.getBoundingClientRect();
+    if (rect) {
+      const { clientX, clientY } = e;
+      if (clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom) {
+        setIsDragOver(false);
+      }
+    }
+  }, []);
+
+  const handleDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
   }, []);
 
   return (
@@ -126,6 +159,7 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
         </div>
 
         <div
+          ref={dropZoneRef}
           className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
             isDragOver
               ? 'border-blue-500 bg-blue-50 transform scale-105'
@@ -134,6 +168,8 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
+          onDragEnter={handleDragEnter}
+          data-drop-zone="true"
         >
           <Upload className={`w-12 h-12 mx-auto mb-4 transition-all duration-300 ${isDragOver ? 'text-blue-600 transform scale-110' : 'text-gray-400'}`} />
           

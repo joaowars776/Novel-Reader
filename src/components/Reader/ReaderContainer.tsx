@@ -11,6 +11,7 @@ import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { getPreferences, savePreferences, saveNavigationState, logError } from '../../utils/storage';
 import { applyInterfaceTheme, getInterfaceTheme } from '../../utils/themes';
 import { EpubParser } from '../../utils/epub-parser';
+import { startReadingSession, endReadingSession, changeChapter, updateReadingActivity } from '../../utils/reading-tracker';
 import type { Book, Chapter, ReadingPreferences, Bookmark, SearchResult } from '../../types';
 
 interface ReaderContainerProps {
@@ -107,6 +108,18 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
           applyInterfaceTheme(theme);
         }
 
+        // Start reading session
+        const currentChapter = chaptersData[currentChapterIndex];
+        if (currentChapter) {
+          startReadingSession(
+            book.id,
+            book.title,
+            book.author,
+            currentChapterIndex,
+            currentChapter.title
+          );
+        }
+
         console.log('Reader initialized successfully');
       } catch (error) {
         console.error('Error initializing reader:', error);
@@ -127,6 +140,9 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
     initializeReader();
 
     return () => {
+      // End reading session when component unmounts
+      endReadingSession();
+      
       if (parser) {
         try {
           parser.destroy();
@@ -146,6 +162,25 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
       });
     }
   }, [currentChapterIndex, chapters.length, book.currentChapter, updateProgress]);
+
+  // Track reading activity
+  useEffect(() => {
+    const handleActivity = () => {
+      updateReadingActivity();
+    };
+
+    // Track various user activities
+    const events = ['scroll', 'click', 'keydown', 'mousemove', 'touchstart'];
+    events.forEach(event => {
+      window.addEventListener(event, handleActivity, { passive: true });
+    });
+
+    return () => {
+      events.forEach(event => {
+        window.removeEventListener(event, handleActivity);
+      });
+    };
+  }, []);
 
   // Screen tap functionality for menu minimization
   useEffect(() => {
@@ -182,22 +217,37 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
     return () => clearTimeout(tapTimeout);
   }, [tapCount]);
 
-  const handleNextChapter = useCallback(() => {
+  const handleNextChapter = useCallback(async () => {
     if (currentChapterIndex < chapters.length - 1) {
-      setCurrentChapterIndex(prev => prev + 1);
+      const newChapterIndex = currentChapterIndex + 1;
+      const newChapter = chapters[newChapterIndex];
+      
+      // Mark current chapter as completed and change to next chapter
+      await changeChapter(newChapterIndex, newChapter.title, true);
+      setCurrentChapterIndex(newChapterIndex);
     }
-  }, [currentChapterIndex, chapters.length]);
+  }, [currentChapterIndex, chapters.length, chapters]);
 
-  const handlePreviousChapter = useCallback(() => {
+  const handlePreviousChapter = useCallback(async () => {
     if (currentChapterIndex > 0) {
-      setCurrentChapterIndex(prev => prev - 1);
+      const newChapterIndex = currentChapterIndex - 1;
+      const newChapter = chapters[newChapterIndex];
+      
+      // Change to previous chapter (not marked as completed)
+      await changeChapter(newChapterIndex, newChapter.title, false);
+      setCurrentChapterIndex(newChapterIndex);
     }
-  }, [currentChapterIndex]);
+  }, [currentChapterIndex, chapters]);
 
-  const handleChapterSelect = useCallback((index: number) => {
-    setCurrentChapterIndex(index);
-    setIsMenuOpen(false);
-  }, []);
+  const handleChapterSelect = useCallback(async (index: number) => {
+    const newChapter = chapters[index];
+    if (newChapter) {
+      // Change to selected chapter
+      await changeChapter(index, newChapter.title, false);
+      setCurrentChapterIndex(index);
+      setIsMenuOpen(false);
+    }
+  }, [chapters]);
 
   const handlePreferencesChange = useCallback(async (newPreferences: ReadingPreferences) => {
     setPreferences(newPreferences);
@@ -247,15 +297,19 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
     }
   }, [parser, chapters]);
 
-  const handleSearchResultClick = useCallback((result: SearchResult) => {
-    setCurrentChapterIndex(result.chapterIndex);
-    setIsSearchOpen(false);
-    // Scroll to position after a brief delay to ensure content is rendered
-    setTimeout(() => {
-      const element = document.querySelector(`[data-search-position="${result.position}"]`);
-      element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
-  }, []);
+  const handleSearchResultClick = useCallback(async (result: SearchResult) => {
+    const newChapter = chapters[result.chapterIndex];
+    if (newChapter) {
+      await changeChapter(result.chapterIndex, newChapter.title, false);
+      setCurrentChapterIndex(result.chapterIndex);
+      setIsSearchOpen(false);
+      // Scroll to position after a brief delay to ensure content is rendered
+      setTimeout(() => {
+        const element = document.querySelector(`[data-search-position="${result.position}"]`);
+        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }, [chapters]);
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -414,7 +468,7 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
           chapters={chapters}
           currentChapterIndex={currentChapterIndex}
           onBookmarkClick={(chapterIndex) => {
-            setCurrentChapterIndex(chapterIndex);
+            handleChapterSelect(chapterIndex);
             setIsBookmarksOpen(false);
           }}
           onClose={() => setIsBookmarksOpen(false)}

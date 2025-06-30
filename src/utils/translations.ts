@@ -11,12 +11,32 @@ const translations: Translations = {
   myLibrary: {
     en: 'My Library',
     pt: 'Minha Biblioteca',
-    de: 'Meine Bibliothek',
-    es: 'Mi Biblioteca',
-    ru: 'Моя Библиотека',
-    ja: '私のライブラリ',
-    zh: '我的图书馆',
-    fr: 'Ma Bibliothèque'
+    de: 'Mijn Bibliotheek',
+    es: 'Mi biblioteca',
+    ru: 'Моя библиотека',
+    ja: 'マイライブラリ',
+    zh: '我的圖書館',
+    fr: 'Ma bibliothèque'
+  },
+  readingHistory: {
+    en: 'My Statistics',
+    pt: 'Minhas Estatísticas',
+    de: 'Meine Statistiken',
+    es: 'Mis Estadísticas',
+    ru: 'Моя Статистика',
+    ja: '私の統計',
+    zh: '我的统计',
+    fr: 'Mes Statistiques'
+  },
+  trackYourProgress: {
+    en: 'Track your progress',
+    pt: 'Acompanhe seu progresso',
+    de: 'Verfolgen Sie Ihren Fortschritt',
+    es: 'Rastrea tu progreso',
+    ru: 'Отслеживайте свой прогресс',
+    ja: '進捗を追跡',
+    zh: '跟踪您的进度',
+    fr: 'Suivez vos progrès'
   },
   books: {
     en: 'books',
@@ -189,14 +209,76 @@ const translations: Translations = {
     fr: 'Chargement de votre bibliothèque...'
   },
   complete: {
-    en: 'complete',
-    pt: 'completo',
-    de: 'vollständig',
-    es: 'completo',
+    en: 'Complete',
+    pt: 'Completo',
+    de: 'Vollständig',
+    es: 'Completo',
     ru: 'завершено',
     ja: '完了',
     zh: '完成',
-    fr: 'terminé'
+    fr: 'Terminé'
+  },
+  
+  // New translations for view modes and drag-drop
+  viewMode: {
+    en: 'View Mode',
+    pt: 'Modo de Visualização',
+    de: 'Ansichtsmodus',
+    es: 'Modo de Vista',
+    ru: 'Режим Просмотра',
+    ja: '表示モード',
+    zh: '查看模式',
+    fr: 'Mode d\'Affichage'
+  },
+  coverView: {
+    en: 'Cover View',
+    pt: 'Visualização de Capa',
+    de: 'Cover-Ansicht',
+    es: 'Vista de Portada',
+    ru: 'Вид Обложки',
+    ja: 'カバー表示',
+    zh: '封面视图',
+    fr: 'Vue Couverture'
+  },
+  detailView: {
+    en: 'Detail View',
+    pt: 'Visualização Detalhada',
+    de: 'Detail-Ansicht',
+    es: 'Vista Detallada',
+    ru: 'Детальный Вид',
+    ja: '詳細表示',
+    zh: '详细视图',
+    fr: 'Vue Détaillée'
+  },
+  dragAndDropEbook: {
+    en: 'Drag & Drop eBook',
+    pt: 'Arrastar e Soltar eBook',
+    de: 'eBook hierher ziehen',
+    es: 'Arrastra y Suelta eBook',
+    ru: 'Перетащите eBook',
+    ja: 'eBookをドラッグ&ドロップ',
+    zh: '拖放电子书',
+    fr: 'Glisser-Déposer eBook'
+  },
+  selectEbook: {
+    en: 'Select eBook',
+    pt: 'Selecionar eBook',
+    de: 'eBook auswählen',
+    es: 'Seleccionar eBook',
+    ru: 'Выбрать eBook',
+    ja: 'eBookを選択',
+    zh: '选择电子书',
+    fr: 'Sélectionner eBook'
+  },
+  openStatistics: {
+    en: 'Open Statistics',
+    pt: 'Abrir Estatísticas',
+    de: 'Statistiken öffnen',
+    es: 'Abrir Estadísticas',
+    ru: 'Открыть Статистику',
+    ja: '統計を開く',
+    zh: '打开统计',
+    fr: 'Ouvrir les Statistiques'
   },
   
   // Book uploader
@@ -332,6 +414,26 @@ const translations: Translations = {
     zh: '返回图书馆',
     fr: 'Retour à la bibliothèque'
   },
+  backToHome: {
+    en: 'Back to Home',
+    pt: 'Voltar ao Início',
+    de: 'Zurück zur Startseite',
+    es: 'Volver al Inicio',
+    ru: 'Вернуться на Главную',
+    ja: 'ホームに戻る',
+    zh: '返回首页',
+    fr: 'Retour à l\'Accueil'
+  },
+  home: {
+    en: 'Home',
+    pt: 'Início',
+    de: 'Startseite',
+    es: 'Inicio',
+    ru: 'Главная',
+    ja: 'ホーム',
+    zh: '首页',
+    fr: 'Accueil'
+  },
   tableOfContents: {
     en: 'Table of contents',
     pt: 'Índice',
@@ -403,6 +505,16 @@ const translations: Translations = {
     fr: 'Partager'
   },
   settings: {
+    en: 'Settings',
+    pt: 'Configurações',
+    de: 'Einstellungen',
+    es: 'Configuraciones',
+    ru: 'Настройки',
+    ja: '設定',
+    zh: '设置',
+    fr: 'Paramètres'
+  },
+    homePageSettings: {
     en: 'Settings',
     pt: 'Configurações',
     de: 'Einstellungen',
@@ -526,86 +638,6 @@ const translations: Translations = {
     zh: '自动',
     fr: 'Automatique'
   },
-  english: {
-    en: 'English',
-    pt: 'Inglês',
-    de: 'Englisch',
-    es: 'Inglés',
-    ru: 'Английский',
-    ja: '英語',
-    zh: '英语',
-    fr: 'Anglais'
-  },
-  portuguese: {
-    en: 'Portuguese',
-    pt: 'Português',
-    de: 'Portugiesisch',
-    es: 'Portugués',
-    ru: 'Португальский',
-    ja: 'ポルトガル語',
-    zh: '葡萄牙语',
-    fr: 'Portugais'
-  },
-  german: {
-    en: 'German',
-    pt: 'Alemão',
-    de: 'Deutsch',
-    es: 'Alemán',
-    ru: 'Немецкий',
-    ja: 'ドイツ語',
-    zh: '德语',
-    fr: 'Allemand'
-  },
-  spanish: {
-    en: 'Spanish',
-    pt: 'Espanhol',
-    de: 'Spanisch',
-    es: 'Español',
-    ru: 'Испанский',
-    ja: 'スペイン語',
-    zh: '西班牙语',
-    fr: 'Espagnol'
-  },
-  russian: {
-    en: 'Russian',
-    pt: 'Russo',
-    de: 'Russisch',
-    es: 'Ruso',
-    ru: 'Русский',
-    ja: 'ロシア語',
-    zh: '俄语',
-    fr: 'Russe'
-  },
-  japanese: {
-    en: 'Japanese',
-    pt: 'Japonês',
-    de: 'Japanisch',
-    es: 'Japonés',
-    ru: 'Японский',
-    ja: '日本語',
-    zh: '日语',
-    fr: 'Japonais'
-  },
-  chinese: {
-    en: 'Chinese',
-    pt: 'Chinês',
-    de: 'Chinesisch',
-    es: 'Chino',
-    ru: 'Китайский',
-    ja: '中国語',
-    zh: '中文',
-    fr: 'Chinois'
-  },
-  french: {
-    en: 'French',
-    pt: 'Francês',
-    de: 'Französisch',
-    es: 'Francés',
-    ru: 'Французский',
-    ja: 'フランス語',
-    zh: '法语',
-    fr: 'Français'
-  },
   closeSettings: {
     en: 'Close settings',
     pt: 'Fechar configurações',
@@ -617,6 +649,1052 @@ const translations: Translations = {
     fr: 'Fermer les paramètres'
   },
   
+  // Reading History specific translations
+  loadingReadingHistory: {
+    en: 'Loading reading history...',
+    pt: 'Carregando histórico de leitura...',
+    de: 'Lade Lesehistorie...',
+    es: 'Cargando historial de lectura...',
+    ru: 'Загрузка истории чтения...',
+    ja: '読書履歴を読み込んでいます...',
+    zh: '正在加载阅读历史...',
+    fr: 'Chargement de l\'historique de lecture...'
+  },
+  chapterHistory: {
+    en: 'Chapter History',
+    pt: 'Histórico de Capítulos',
+    de: 'Kapitel-Historie',
+    es: 'Historial de Capítulos',
+    ru: 'История Глав',
+    ja: '章の履歴',
+    zh: '章节历史',
+    fr: 'Historique des Chapitres'
+  },
+  bookHistory: {
+    en: 'Book History',
+    pt: 'Histórico de Livros',
+    de: 'Buch-Historie',
+    es: 'Historial de Libros',
+    ru: 'История Книг',
+    ja: '本の履歴',
+    zh: '书籍历史',
+    fr: 'Historique des Livres'
+  },
+  statistics: {
+    en: 'Statistics',
+    pt: 'Estatísticas',
+    de: 'Statistiken',
+    es: 'Estadísticas',
+    ru: 'Статистика',
+    ja: '統計',
+    zh: '统计',
+    fr: 'Statistiques'
+  },
+  trends: {
+    en: 'Trends',
+    pt: 'Tendências',
+    de: 'Trends',
+    es: 'Tendencias',
+    ru: 'Тренды',
+    ja: 'トレンド',
+    zh: '趋势',
+    fr: 'Tendances'
+  },
+  totalTime: {
+    en: 'Total Time',
+    pt: 'Tempo Total',
+    de: 'Gesamtzeit',
+    es: 'Tiempo Total',
+    ru: 'Общее Время',
+    ja: '総時間',
+    zh: '总时间',
+    fr: 'Temps Total'
+  },
+  chaptersCompleted: {
+    en: 'Chapters Completed',
+    pt: 'Capítulos Concluídos',
+    de: 'Kapitel Abgeschlossen',
+    es: 'Capítulos Completados',
+    ru: 'глав завершено',
+    ja: '章完了',
+    zh: '章节完成',
+    fr: 'Chapitres Terminés'
+  },
+  autoFormat: {
+    en: 'Auto Format',
+    pt: 'Formato Automático',
+    de: 'Auto-Format',
+    es: 'Formato Automático',
+    ru: 'Авто Формат',
+    ja: '自動フォーマット',
+    zh: '自动格式',
+    fr: 'Format Automatique'
+  },
+  minutes: {
+    en: 'Minutes',
+    pt: 'Minutos',
+    de: 'Minuten',
+    es: 'Minutos',
+    ru: 'Минуты',
+    ja: '分',
+    zh: '分钟',
+    fr: 'Minutes'
+  },
+  hours: {
+    en: 'Hours',
+    pt: 'Horas',
+    de: 'Stunden',
+    es: 'Horas',
+    ru: 'Часы',
+    ja: '時間',
+    zh: '小时',
+    fr: 'Heures'
+  },
+  detailed: {
+    en: 'Detailed',
+    pt: 'Detalhado',
+    de: 'Detailliert',
+    es: 'Detallado',
+    ru: 'Подробно',
+    ja: '詳細',
+    zh: '详细',
+    fr: 'Détaillé'
+  },
+  exporting: {
+    en: 'Exporting...',
+    pt: 'Exportando...',
+    de: 'Exportiere...',
+    es: 'Exportando...',
+    ru: 'Экспорт...',
+    ja: 'エクスポート中...',
+    zh: '导出中...',
+    fr: 'Exportation...'
+  },
+  exportData: {
+    en: 'Export Data',
+    pt: 'Exportar Dados',
+    de: 'Daten exportieren',
+    es: 'Exportar Datos',
+    ru: 'Экспорт Данных',
+    ja: 'データをエクスポート',
+    zh: '导出数据',
+    fr: 'Exporter les Données'
+  },
+  searchBooksOrChapters: {
+    en: 'Search books or chapters...',
+    pt: 'Pesquisar livros ou capítulos...',
+    de: 'Bücher oder Kapitel suchen...',
+    es: 'Buscar libros o capítulos...',
+    ru: 'Поиск книг или глав...',
+    ja: '本や章を検索...',
+    zh: '搜索书籍或章节...',
+    fr: 'Rechercher des livres ou des chapitres...'
+  },
+  sortByDate: {
+    en: 'Sort by Date',
+    pt: 'Ordenar por Data',
+    de: 'Nach Datum sortieren',
+    es: 'Ordenar por Fecha',
+    ru: 'Сортировать по Дате',
+    ja: '日付で並び替え',
+    zh: '按日期排序',
+    fr: 'Trier par Date'
+  },
+  sortByDuration: {
+    en: 'Sort by Duration',
+    pt: 'Ordenar por Duração',
+    de: 'Nach Dauer sortieren',
+    es: 'Ordenar por Duración',
+    ru: 'Сортировать по Длительности',
+    ja: '期間で並び替え',
+    zh: '按持续时间排序',
+    fr: 'Trier par Durée'
+  },
+  sortByBook: {
+    en: 'Sort by Book',
+    pt: 'Ordenar por Livro',
+    de: 'Nach Buch sortieren',
+    es: 'Ordenar por Libro',
+    ru: 'Сортировать по Книге',
+    ja: '本で並び替え',
+    zh: '按书籍排序',
+    fr: 'Trier par Livre'
+  },
+  sortByChapter: {
+    en: 'Sort by Chapter',
+    pt: 'Ordenar por Capítulo',
+    de: 'Nach Kapitel sortieren',
+    es: 'Ordenar por Capítulo',
+    ru: 'Сортировать по Главе',
+    ja: '章で並び替え',
+    zh: '按章节排序',
+    fr: 'Trier par Chapitre'
+  },
+  allTime: {
+    en: 'All Time',
+    pt: 'Todo o Tempo',
+    de: 'Alle Zeit',
+    es: 'Todo el Tiempo',
+    ru: 'Все Время',
+    ja: '全期間',
+    zh: '所有时间',
+    fr: 'Tout le Temps'
+  },
+  today: {
+    en: 'Today',
+    pt: 'Hoje',
+    de: 'Heute',
+    es: 'Hoy',
+    ru: 'Сегодня',
+    ja: '今日',
+    zh: '今天',
+    fr: 'Aujourd\'hui'
+  },
+  thisWeek: {
+    en: 'This Week',
+    pt: 'Esta Semana',
+    de: 'Diese Woche',
+    es: 'Esta Semana',
+    ru: 'На Этой Неделе',
+    ja: '今週',
+    zh: '本周',
+    fr: 'Cette Semaine'
+  },
+  thisMonth: {
+    en: 'This Month',
+    pt: 'Este Mês',
+    de: 'Diesen Monat',
+    es: 'Este Mes',
+    ru: 'В Этом Месяце',
+    ja: '今月',
+    zh: '本月',
+    fr: 'Ce Mois'
+  },
+  completedOnly: {
+    en: 'Completed Only',
+    pt: 'Apenas Concluídos',
+    de: 'Nur Abgeschlossene',
+    es: 'Solo Completados',
+    ru: 'Только Завершенные',
+    ja: '完了のみ',
+    zh: '仅已完成',
+    fr: 'Terminés Seulement'
+  },
+  inProgress: {
+    en: 'In Progress',
+    pt: 'Em Progresso',
+    de: 'In Bearbeitung',
+    es: 'En Progreso',
+    ru: 'В Процессе',
+    ja: '進行中',
+    zh: '进行中',
+    fr: 'En Cours'
+  },
+  translate: {
+    en: 'Translate',
+    pt: 'Traduzir',
+    de: 'Übersetzen',
+    es: 'Traducir',
+    ru: 'Перевести',
+    ja: '翻訳',
+    zh: '翻译',
+    fr: 'Traduire'
+  },
+  originalText: {
+    en: 'Show Original',
+    pt: 'Mostrar Original',
+    de: 'Original anzeigen',
+    es: 'Mostrar Original',
+    ru: 'Показать Оригинал',
+    ja: 'オリジナルを表示',
+    zh: '显示原文',
+    fr: 'Afficher l\'Original'
+  },
+  translating: {
+    en: 'Translating...',
+    pt: 'Traduzindo...',
+    de: 'Übersetze...',
+    es: 'Traduciendo...',
+    ru: 'Перевод...',
+    ja: '翻訳中...',
+    zh: '翻译中...',
+    fr: 'Traduction...'
+  },
+  experimentalFeature: {
+    en: 'Experimental Feature',
+    pt: 'Recurso Experimental',
+    de: 'Experimentelle Funktion',
+    es: 'Función Experimental',
+    ru: 'Экспериментальная Функция',
+    ja: '実験的機能',
+    zh: '实验性功能',
+    fr: 'Fonctionnalité Expérimentale'
+  },
+  experimentalWarning: {
+    en: 'My Statistics is currently in experimental phase. Data accuracy and performance may vary as we continue to improve this feature.',
+    pt: 'Minhas Estatísticas está atualmente em fase experimental. A precisão dos dados e o desempenho podem variar conforme continuamos a melhorar este recurso.',
+    de: 'Meine Statistiken befinden sich derzeit in der experimentellen Phase. Datengenauigkeit und Leistung können variieren, während wir diese Funktion weiter verbessern.',
+    es: 'Mis Estadísticas está actualmente en fase experimental. La precisión de los datos y el rendimiento pueden variar mientras continuamos mejorando esta función.',
+    ru: 'Моя Статистика в настоящее время находится в экспериментальной фазе. Точность данных и производительность могут варьироваться по мере улучшения этой функции.',
+    ja: '私の統計は現在実験段階にあります。この機能を改善し続ける中で、データの精度とパフォーマンスが変動する可能性があります。',
+    zh: '我的统计目前处于实验阶段。随着我们继续改进此功能，数据准确性和性能可能会有所不同。',
+    fr: 'Mes Statistiques est actuellement en phase expérimentale. La précision des données et les performances peuvent varier alors que nous continuons à améliorer cette fonctionnalité.'
+  },
+  autoTranslate: {
+    en: 'Auto Translate (Experimental)',
+    pt: 'Tradução Automática (Experimental)',
+    de: 'Auto-Übersetzung (Experimentell)',
+    es: 'Traducción Automática (Experimental)',
+    ru: 'Автоперевод (Экспериментальный)',
+    ja: '自動翻訳（実験的）',
+    zh: '自动翻译（实验性）',
+    fr: 'Traduction Automatique (Expérimental)'
+  },
+  streakRequirement: {
+    en: 'Streak features require at least 30 minutes of daily reading time',
+    pt: 'Recursos de sequência requerem pelo menos 30 minutos de tempo de leitura diário',
+    de: 'Streak-Funktionen erfordern mindestens 30 Minuten tägliche Lesezeit',
+    es: 'Las funciones de racha requieren al menos 30 minutos de tiempo de lectura diario',
+    ru: 'Функции серий требуют не менее 30 минут ежедневного времени чтения',
+    ja: 'ストリーク機能には1日最低30分の読書時間が必要です',
+    zh: '连续阅读功能需要每天至少30分钟的阅读时间',
+    fr: 'Les fonctionnalités de série nécessitent au moins 30 minutes de temps de lecture quotidien'
+  },
+
+  // New comprehensive translations for Reading Statistics
+  totalReadingTime: {
+    en: 'Total Reading Time',
+    pt: 'Tempo Total de Leitura',
+    de: 'Gesamte Lesezeit',
+    es: 'Tiempo Total de Lectura',
+    ru: 'Общее Время Чтения',
+    ja: '総読書時間',
+    zh: '总阅读时间',
+    fr: 'Temps Total de Lecture'
+  },
+  timeSpentReadingAcrossAllBooks: {
+    en: 'Time spent reading across all books',
+    pt: 'Tempo gasto lendo todos os livros',
+    de: 'Zeit, die mit dem Lesen aller Bücher verbracht wurde',
+    es: 'Tiempo dedicado a leer todos los libros',
+    ru: 'Время, потраченное на чтение всех книг',
+    ja: 'すべての本を読むのに費やした時間',
+    zh: '阅读所有书籍所花费的时间',
+    fr: 'Temps passé à lire tous les livres'
+  },
+  totalChaptersFinished: {
+    en: 'Total chapters you\'ve finished reading',
+    pt: 'Total de capítulos que você terminou de ler',
+    de: 'Gesamtzahl der Kapitel, die Sie gelesen haben',
+    es: 'Total de capítulos que has terminado de leer',
+    ru: 'Общее количество глав, которые вы прочитали',
+    ja: '読み終えた章の総数',
+    zh: '您已完成阅读的章节总数',
+    fr: 'Nombre total de chapitres que vous avez terminés'
+  },
+  booksStarted: {
+    en: 'Books Started',
+    pt: 'Livros Iniciados',
+    de: 'Begonnene Bücher',
+    es: 'Libros Iniciados',
+    ru: 'Начатые Книги',
+    ja: '開始した本',
+    zh: '开始的书籍',
+    fr: 'Livres Commencés'
+  },
+  numberOfBooksBegun: {
+    en: 'Number of books you\'ve begun reading',
+    pt: 'Número de livros que você começou a ler',
+    de: 'Anzahl der Bücher, die Sie zu lesen begonnen haben',
+    es: 'Número de libros que has comenzado a leer',
+    ru: 'Количество книг, которые вы начали читать',
+    ja: '読み始めた本の数',
+    zh: '您开始阅读的书籍数量',
+    fr: 'Nombre de livres que vous avez commencé à lire'
+  },
+  booksCompleted: {
+    en: 'Books Completed',
+    pt: 'Livros Concluídos',
+    de: 'Abgeschlossene Bücher',
+    es: 'Libros Completados',
+    ru: 'Завершенные Книги',
+    ja: '完了した本',
+    zh: '完成的书籍',
+    fr: 'Livres Terminés'
+  },
+  booksReadFromStartToFinish: {
+    en: 'Books you\'ve read from start to finish',
+    pt: 'Livros que você leu do início ao fim',
+    de: 'Bücher, die Sie von Anfang bis Ende gelesen haben',
+    es: 'Libros que has leído de principio a fin',
+    ru: 'Книги, которые вы прочитали от начала до конца',
+    ja: '最初から最後まで読んだ本',
+    zh: '您从头到尾阅读的书籍',
+    fr: 'Livres que vous avez lus du début à la fin'
+  },
+  averageSession: {
+    en: 'Average Session',
+    pt: 'Sessão Média',
+    de: 'Durchschnittliche Sitzung',
+    es: 'Sesión Promedio',
+    ru: 'Средняя Сессия',
+    ja: '平均セッション',
+    zh: '平均会话',
+    fr: 'Session Moyenne'
+  },
+  averageTimePerReadingSession: {
+    en: 'Average time per reading session',
+    pt: 'Tempo médio por sessão de leitura',
+    de: 'Durchschnittliche Zeit pro Lesesitzung',
+    es: 'Tiempo promedio por sesión de lectura',
+    ru: 'Среднее время за сеанс чтения',
+    ja: '読書セッションあたりの平均時間',
+    zh: '每次阅读会话的平均时间',
+    fr: 'Temps moyen par session de lecture'
+  },
+  longestSession: {
+    en: 'Longest Session',
+    pt: 'Sessão Mais Longa',
+    de: 'Längste Sitzung',
+    es: 'Sesión Más Larga',
+    ru: 'Самая Длинная Сессия',
+    ja: '最長セッション',
+    zh: '最长会话',
+    fr: 'Session la Plus Longue'
+  },
+  longestSingleReadingSession: {
+    en: 'Your longest single reading session',
+    pt: 'Sua sessão de leitura mais longa',
+    de: 'Ihre längste einzelne Lesesitzung',
+    es: 'Tu sesión de lectura más larga',
+    ru: 'Ваша самая длинная сессия чтения',
+    ja: 'あなたの最長の読書セッション',
+    zh: '您最长的单次阅读会话',
+    fr: 'Votre plus longue session de lecture'
+  },
+  currentStreak: {
+    en: 'Current Streak',
+    pt: 'Sequência Atual',
+    de: 'Aktuelle Serie',
+    es: 'Racha Actual',
+    ru: 'Текущая Серия',
+    ja: '現在のストリーク',
+    zh: '当前连续',
+    fr: 'Série Actuelle'
+  },
+  consecutiveDaysWithReadingActivity: {
+    en: 'Consecutive days with reading activity',
+    pt: 'Dias consecutivos com atividade de leitura',
+    de: 'Aufeinanderfolgende Tage mit Leseaktivität',
+    es: 'Días consecutivos con actividad de lectura',
+    ru: 'Последовательные дни с активностью чтения',
+    ja: '読書活動のある連続日数',
+    zh: '连续阅读活动天数',
+    fr: 'Jours consécutifs avec activité de lecture'
+  },
+  longestStreak: {
+    en: 'Longest Streak',
+    pt: 'Sequência Mais Longa',
+    de: 'Längste Serie',
+    es: 'Racha Más Larga',
+    ru: 'Самая Длинная Серия',
+    ja: '最長ストリーク',
+    zh: '最长连续',
+    fr: 'Plus Longue Série'
+  },
+  bestReadingStreakEver: {
+    en: 'Your best reading streak ever',
+    pt: 'Sua melhor sequência de leitura de todos os tempos',
+    de: 'Ihre beste Leseserie aller Zeiten',
+    es: 'Tu mejor racha de lectura de todos los tiempos',
+    ru: 'Ваша лучшая серия чтения за все время',
+    ja: 'これまでで最高の読書ストリーク',
+    zh: '您有史以来最好的阅读连续记录',
+    fr: 'Votre meilleure série de lecture de tous les temps'
+  },
+  days: {
+    en: 'days',
+    pt: 'dias',
+    de: 'Tage',
+    es: 'días',
+    ru: 'дней',
+    ja: '日',
+    zh: '天',
+    fr: 'jours'
+  },
+  day: {
+    en: 'day',
+    pt: 'dia',
+    de: 'Tag',
+    es: 'día',
+    ru: 'день',
+    ja: '日',
+    zh: '天',
+    fr: 'jour'
+  },
+  note: {
+    en: 'Note',
+    pt: 'Nota',
+    de: 'Hinweis',
+    es: 'Nota',
+    ru: 'Примечание',
+    ja: '注意',
+    zh: '注意',
+    fr: 'Note'
+  },
+  readingAverages: {
+    en: 'Reading Averages',
+    pt: 'Médias de Leitura',
+    de: 'Lese-Durchschnitte',
+    es: 'Promedios de Lectura',
+    ru: 'Средние Показатели Чтения',
+    ja: '読書平均',
+    zh: '阅读平均值',
+    fr: 'Moyennes de Lecture'
+  },
+  dailyAverage: {
+    en: 'Daily Average',
+    pt: 'Média Diária',
+    de: 'Täglicher Durchschnitt',
+    es: 'Promedio Diario',
+    ru: 'Дневное Среднее',
+    ja: '日平均',
+    zh: '日平均',
+    fr: 'Moyenne Quotidienne'
+  },
+  averageReadingTimePerDay: {
+    en: 'Average reading time per day (last 90 days)',
+    pt: 'Tempo médio de leitura por dia (últimos 90 dias)',
+    de: 'Durchschnittliche Lesezeit pro Tag (letzte 90 Tage)',
+    es: 'Tiempo promedio de lectura por día (últimos 90 días)',
+    ru: 'Среднее время чтения в день (последние 90 дней)',
+    ja: '1日あたりの平均読書時間（過去90日間）',
+    zh: '每日平均阅读时间（过去90天）',
+    fr: 'Temps de lecture moyen par jour (90 derniers jours)'
+  },
+  weeklyAverage: {
+    en: 'Weekly Average',
+    pt: 'Média Semanal',
+    de: 'Wöchentlicher Durchschnitt',
+    es: 'Promedio Semanal',
+    ru: 'Недельное Среднее',
+    ja: '週平均',
+    zh: '周平均',
+    fr: 'Moyenne Hebdomadaire'
+  },
+  averageReadingTimePerWeek: {
+    en: 'Average reading time per week',
+    pt: 'Tempo médio de leitura por semana',
+    de: 'Durchschnittliche Lesezeit pro Woche',
+    es: 'Tiempo promedio de lectura por semana',
+    ru: 'Среднее время чтения в неделю',
+    ja: '週あたりの平均読書時間',
+    zh: '每周平均阅读时间',
+    fr: 'Temps de lecture moyen par semaine'
+  },
+  monthlyAverage: {
+    en: 'Monthly Average',
+    pt: 'Média Mensal',
+    de: 'Monatlicher Durchschnitt',
+    es: 'Promedio Mensual',
+    ru: 'Месячное Среднее',
+    ja: '月平均',
+    zh: '月平均',
+    fr: 'Moyenne Mensuelle'
+  },
+  averageReadingTimePerMonth: {
+    en: 'Average reading time per month',
+    pt: 'Tempo médio de leitura por mês',
+    de: 'Durchschnittliche Lesezeit pro Monat',
+    es: 'Tiempo promedio de lectura por mes',
+    ru: 'Среднее время чтения в месяц',
+    ja: '月あたりの平均読書時間',
+    zh: '每月平均阅读时间',
+    fr: 'Temps de lecture moyen par mois'
+  },
+  achievementHighlights: {
+    en: 'Achievement Highlights',
+    pt: 'Destaques de Conquistas',
+    de: 'Erfolgs-Highlights',
+    es: 'Aspectos Destacados de Logros',
+    ru: 'Основные Достижения',
+    ja: '達成ハイライト',
+    zh: '成就亮点',
+    fr: 'Points Forts des Réalisations'
+  },
+  completionRate: {
+    en: 'Completion Rate',
+    pt: 'Taxa de Conclusão',
+    de: 'Abschlussrate',
+    es: 'Tasa de Finalización',
+    ru: 'Процент Завершения',
+    ja: '完了率',
+    zh: '完成率',
+    fr: 'Taux d\'Achèvement'
+  },
+  readingConsistency: {
+    en: 'Reading Consistency',
+    pt: 'Consistência de Leitura',
+    de: 'Lese-Konsistenz',
+    es: 'Consistencia de Lectura',
+    ru: 'Постоянство Чтения',
+    ja: '読書の一貫性',
+    zh: '阅读一致性',
+    fr: 'Cohérence de Lecture'
+  },
+  requires30MinDaily: {
+    en: 'Requires 30+ min daily',
+    pt: 'Requer 30+ min diários',
+    de: 'Erfordert 30+ Min täglich',
+    es: 'Requiere 30+ min diarios',
+    ru: 'Требует 30+ мин ежедневно',
+    ja: '毎日30分以上必要',
+    zh: '需要每天30分钟以上',
+    fr: 'Nécessite 30+ min quotidiennes'
+  },
+  readingInsights: {
+    en: 'Reading Insights',
+    pt: 'Insights de Leitura',
+    de: 'Lese-Einblicke',
+    es: 'Perspectivas de Lectura',
+    ru: 'Аналитика Чтения',
+    ja: '読書インサイト',
+    zh: '阅读洞察',
+    fr: 'Aperçus de Lecture'
+  },
+  readingHabits: {
+    en: 'Reading Habits',
+    pt: 'Hábitos de Leitura',
+    de: 'Lesegewohnheiten',
+    es: 'Hábitos de Lectura',
+    ru: 'Привычки Чтения',
+    ja: '読書習慣',
+    zh: '阅读习惯',
+    fr: 'Habitudes de Lecture'
+  },
+  averageSessionLength: {
+    en: 'Average session length',
+    pt: 'Duração média da sessão',
+    de: 'Durchschnittliche Sitzungsdauer',
+    es: 'Duración promedio de sesión',
+    ru: 'Средняя продолжительность сессии',
+    ja: '平均セッション時間',
+    zh: '平均会话时长',
+    fr: 'Durée moyenne de session'
+  },
+  dailyReadingGoalProgress: {
+    en: 'Daily reading goal progress',
+    pt: 'Progresso da meta diária de leitura',
+    de: 'Fortschritt des täglichen Leseziels',
+    es: 'Progreso de la meta diaria de lectura',
+    ru: 'Прогресс ежедневной цели чтения',
+    ja: '日々の読書目標の進捗',
+    zh: '每日阅读目标进度',
+    fr: 'Progrès de l\'objectif de lecture quotidien'
+  },
+  noData: {
+    en: 'No data',
+    pt: 'Sem dados',
+    de: 'Keine Daten',
+    es: 'Sin datos',
+    ru: 'Нет данных',
+    ja: 'データなし',
+    zh: '无数据',
+    fr: 'Aucune donnée'
+  },
+  buildDailyHabit: {
+    en: 'Build daily habit',
+    pt: 'Construir hábito diário',
+    de: 'Tägliche Gewohnheit aufbauen',
+    es: 'Construir hábito diario',
+    ru: 'Формировать ежедневную привычку',
+    ja: '日々の習慣を作る',
+    zh: '建立日常习惯',
+    fr: 'Construire une habitude quotidienne'
+  },
+  excellent: {
+    en: 'Excellent',
+    pt: 'Excelente',
+    de: 'Ausgezeichnet',
+    es: 'Excelente',
+    ru: 'Отлично',
+    ja: '優秀',
+    zh: '优秀',
+    fr: 'Excellent'
+  },
+  good: {
+    en: 'Good',
+    pt: 'Bom',
+    de: 'Gut',
+    es: 'Bueno',
+    ru: 'Хорошо',
+    ja: '良い',
+    zh: '良好',
+    fr: 'Bon'
+  },
+  gettingStarted: {
+    en: 'Getting started',
+    pt: 'Começando',
+    de: 'Erste Schritte',
+    es: 'Empezando',
+    ru: 'Начинаем',
+    ja: '始めています',
+    zh: '开始',
+    fr: 'Commencer'
+  },
+  needsImprovement: {
+    en: 'Needs improvement',
+    pt: 'Precisa melhorar',
+    de: 'Verbesserung erforderlich',
+    es: 'Necesita mejorar',
+    ru: 'Требует улучшения',
+    ja: '改善が必要',
+    zh: '需要改进',
+    fr: 'Nécessite une amélioration'
+  },
+  progressSummary: {
+    en: 'Progress Summary',
+    pt: 'Resumo do Progresso',
+    de: 'Fortschritts-Zusammenfassung',
+    es: 'Resumen de Progreso',
+    ru: 'Сводка Прогресса',
+    ja: '進捗サマリー',
+    zh: '进度摘要',
+    fr: 'Résumé des Progrès'
+  },
+  booksInProgress: {
+    en: 'Books in progress',
+    pt: 'Livros em progresso',
+    de: 'Bücher in Bearbeitung',
+    es: 'Libros en progreso',
+    ru: 'Книги в процессе',
+    ja: '進行中の本',
+    zh: '进行中的书籍',
+    fr: 'Livres en cours'
+  },
+  bestStreak: {
+    en: 'Best streak',
+    pt: 'Melhor sequência',
+    de: 'Beste Serie',
+    es: 'Mejor racha',
+    ru: 'Лучшая серия',
+    ja: '最高ストリーク',
+    zh: '最佳连续',
+    fr: 'Meilleure série'
+  },
+  readingStatistics: {
+    en: 'Reading Statistics',
+    pt: 'Estatísticas de Leitura',
+    de: 'Lese-Statistiken',
+    es: 'Estadísticas de Lectura',
+    ru: 'Статистика Чтения',
+    ja: '読書統計',
+    zh: '阅读统计',
+    fr: 'Statistiques de Lecture'
+  },
+
+  // Reading Trends translations
+  readingTrends: {
+    en: 'Reading Trends',
+    pt: 'Tendências de Leitura',
+    de: 'Lese-Trends',
+    es: 'Tendencias de Lectura',
+    ru: 'Тренды Чтения',
+    ja: '読書トレンド',
+    zh: '阅读趋势',
+    fr: 'Tendances de Lecture'
+  },
+  loadingReadingTrends: {
+    en: 'Loading reading trends...',
+    pt: 'Carregando tendências de leitura...',
+    de: 'Lade Lese-Trends...',
+    es: 'Cargando tendencias de lectura...',
+    ru: 'Загрузка трендов чтения...',
+    ja: '読書トレンドを読み込んでいます...',
+    zh: '正在加载阅读趋势...',
+    fr: 'Chargement des tendances de lecture...'
+  },
+  period: {
+    en: 'Period',
+    pt: 'Período',
+    de: 'Zeitraum',
+    es: 'Período',
+    ru: 'Период',
+    ja: '期間',
+    zh: '期间',
+    fr: 'Période'
+  },
+  last7Days: {
+    en: 'Last 7 days',
+    pt: 'Últimos 7 dias',
+    de: 'Letzte 7 Tage',
+    es: 'Últimos 7 días',
+    ru: 'Последние 7 дней',
+    ja: '過去7日間',
+    zh: '过去7天',
+    fr: '7 derniers jours'
+  },
+  last30Days: {
+    en: 'Last 30 days',
+    pt: 'Últimos 30 dias',
+    de: 'Letzte 30 Tage',
+    es: 'Últimos 30 días',
+    ru: 'Последние 30 дней',
+    ja: '過去30日間',
+    zh: '过去30天',
+    fr: '30 derniers jours'
+  },
+  last90Days: {
+    en: 'Last 90 days',
+    pt: 'Últimos 90 dias',
+    de: 'Letzte 90 Tage',
+    es: 'Últimos 90 días',
+    ru: 'Последние 90 дней',
+    ja: '過去90日間',
+    zh: '过去90天',
+    fr: '90 derniers jours'
+  },
+  lastYear: {
+    en: 'Last year',
+    pt: 'Último ano',
+    de: 'Letztes Jahr',
+    es: 'Último año',
+    ru: 'Последний год',
+    ja: '過去1年',
+    zh: '过去一年',
+    fr: 'Dernière année'
+  },
+  activeDays: {
+    en: 'Active Days',
+    pt: 'Dias Ativos',
+    de: 'Aktive Tage',
+    es: 'Días Activos',
+    ru: 'Активные Дни',
+    ja: 'アクティブ日数',
+    zh: '活跃天数',
+    fr: 'Jours Actifs'
+  },
+  sessions: {
+    en: 'Sessions',
+    pt: 'Sessões',
+    de: 'Sitzungen',
+    es: 'Sesiones',
+    ru: 'Сессии',
+    ja: 'セッション',
+    zh: '会话',
+    fr: 'Sessions'
+  },
+  dailyReadingActivity: {
+    en: 'Daily Reading Activity',
+    pt: 'Atividade Diária de Leitura',
+    de: 'Tägliche Leseaktivität',
+    es: 'Actividad Diaria de Lectura',
+    ru: 'Ежедневная Активность Чтения',
+    ja: '日々の読書活動',
+    zh: '每日阅读活动',
+    fr: 'Activité de Lecture Quotidienne'
+  },
+  noReadingDataAvailable: {
+    en: 'No reading data available for this period',
+    pt: 'Nenhum dado de leitura disponível para este período',
+    de: 'Keine Lesedaten für diesen Zeitraum verfügbar',
+    es: 'No hay datos de lectura disponibles para este período',
+    ru: 'Нет данных о чтении за этот период',
+    ja: 'この期間の読書データはありません',
+    zh: '此期间没有可用的阅读数据',
+    fr: 'Aucune donnée de lecture disponible pour cette période'
+  },
+  highActivity: {
+    en: 'High activity',
+    pt: 'Alta atividade',
+    de: 'Hohe Aktivität',
+    es: 'Alta actividad',
+    ru: 'Высокая активность',
+    ja: '高い活動',
+    zh: '高活动',
+    fr: 'Activité élevée'
+  },
+  mediumActivity: {
+    en: 'Medium activity',
+    pt: 'Atividade média',
+    de: 'Mittlere Aktivität',
+    es: 'Actividad media',
+    ru: 'Средняя активность',
+    ja: '中程度の活動',
+    zh: '中等活动',
+    fr: 'Activité moyenne'
+  },
+  lowActivity: {
+    en: 'Low activity',
+    pt: 'Baixa atividade',
+    de: 'Geringe Aktivität',
+    es: 'Baja actividad',
+    ru: 'Низкая активность',
+    ja: '低い活動',
+    zh: '低活动',
+    fr: 'Activité faible'
+  },
+  noActivity: {
+    en: 'No activity',
+    pt: 'Sem atividade',
+    de: 'Keine Aktivität',
+    es: 'Sin actividad',
+    ru: 'Нет активности',
+    ja: '活動なし',
+    zh: '无活动',
+    fr: 'Aucune activité'
+  },
+  weeklyBreakdown: {
+    en: 'Weekly Breakdown',
+    pt: 'Divisão Semanal',
+    de: 'Wöchentliche Aufschlüsselung',
+    es: 'Desglose Semanal',
+    ru: 'Недельная Разбивка',
+    ja: '週間内訳',
+    zh: '每周细分',
+    fr: 'Répartition Hebdomadaire'
+  },
+  avgPerDay: {
+    en: 'avg per day',
+    pt: 'média por dia',
+    de: 'Durchschnitt pro Tag',
+    es: 'promedio por día',
+    ru: 'среднее в день',
+    ja: '1日平均',
+    zh: '每日平均',
+    fr: 'moyenne par jour'
+  },
+  monday: {
+    en: 'Monday',
+    pt: 'Segunda',
+    de: 'Montag',
+    es: 'Lunes',
+    ru: 'Понедельник',
+    ja: '月曜日',
+    zh: '星期一',
+    fr: 'Lundi'
+  },
+  tuesday: {
+    en: 'Tuesday',
+    pt: 'Terça',
+    de: 'Dienstag',
+    es: 'Martes',
+    ru: 'Вторник',
+    ja: '火曜日',
+    zh: '星期二',
+    fr: 'Mardi'
+  },
+  wednesday: {
+    en: 'Wednesday',
+    pt: 'Quarta',
+    de: 'Mittwoch',
+    es: 'Miércoles',
+    ru: 'Среда',
+    ja: '水曜日',
+    zh: '星期三',
+    fr: 'Mercredi'
+  },
+  thursday: {
+    en: 'Thursday',
+    pt: 'Quinta',
+    de: 'Donnerstag',
+    es: 'Jueves',
+    ru: 'Четверг',
+    ja: '木曜日',
+    zh: '星期四',
+    fr: 'Jeudi'
+  },
+  friday: {
+    en: 'Friday',
+    pt: 'Sexta',
+    de: 'Freitag',
+    es: 'Viernes',
+    ru: 'Пятница',
+    ja: '金曜日',
+    zh: '星期五',
+    fr: 'Vendredi'
+  },
+  saturday: {
+    en: 'Saturday',
+    pt: 'Sábado',
+    de: 'Samstag',
+    es: 'Sábado',
+    ru: 'Суббота',
+    ja: '土曜日',
+    zh: '星期六',
+    fr: 'Samedi'
+  },
+  sunday: {
+    en: 'Sunday',
+    pt: 'Domingo',
+    de: 'Sonntag',
+    es: 'Domingo',
+    ru: 'Воскресенье',
+    ja: '日曜日',
+    zh: '星期日',
+    fr: 'Dimanche'
+  },
+  // Missing translations for untranslated elements
+  avgPerBook: {
+    en: 'Avg. per Book',
+    pt: 'Média por Livro',
+    de: 'Durchschnitt pro Buch',
+    es: 'Promedio por Libro',
+    ru: 'Среднее на Книгу',
+    ja: '本あたりの平均',
+    zh: '每本书平均',
+    fr: 'Moyenne par Livre'
+  },
+  firstRead: {
+    en: 'First read',
+    pt: 'Primeira leitura',
+    de: 'Erste Lesung',
+    es: 'Primera lectura',
+    ru: 'Первое чтение',
+    ja: '初回読書',
+    zh: '首次阅读',
+    fr: 'Première lecture'
+  },
+  avgPerChapter: {
+    en: 'Avg. per Chapter',
+    pt: 'Média por Capítulo',
+    de: 'Durchschnitt pro Kapitel',
+    es: 'Promedio por Capítulo',
+    ru: 'Среднее на Главу',
+    ja: '章あたりの平均',
+    zh: '每章平均',
+    fr: 'Moyenne par Chapitre'
+  },
+  readXTimes: {
+    en: 'Read {count} time{plural}',
+    pt: 'Lido {count} vez{plural}',
+    de: '{count} Mal gelesen',
+    es: 'Leído {count} vez{plural}',
+    ru: 'Прочитано {count} раз{plural}',
+    ja: '{count}回読書',
+    zh: '阅读{count}次',
+    fr: 'Lu {count} fois'
+  },
+  readingSessions: {
+    en: 'Reading Sessions',
+    pt: 'Sessões de Leitura',
+    de: 'Lesesitzungen',
+    es: 'Sesiones de Lectura',
+    ru: 'Сессии Чтения',
+    ja: '読書セッション',
+    zh: '阅读会话',
+    fr: 'Sessions de Lecture'
+  },
+  time: {
+    en: 'Time',
+    pt: 'Tempo',
+    de: 'Zeit',
+    es: 'Tiempo',
+    ru: 'Время',
+    ja: '時間',
+    zh: '时间',
+    fr: 'Temps'
+  },
   // Font preview text
   fontPreviewText: {
     en: 'The quick brown fox jumps over the lazy dog',
@@ -670,8 +1748,7 @@ const translations: Translations = {
     zh: '备份',
     fr: 'Sauvegarde'
   },
-  
-  // Typography
+ // Typography
   typography: {
     en: 'Typography',
     pt: 'Tipografia',
@@ -803,6 +1880,26 @@ const translations: Translations = {
     ja: 'インターフェースの色',
     zh: '界面颜色',
     fr: 'Couleurs d\'Interface'
+  },
+    interfaceTheme: {
+    en: 'Interface Colors',
+    pt: 'Cores da Interface',
+    de: 'Oberflächenfarben',
+    es: 'Colores de Interfaz',
+    ru: 'Цвета Интерфейса',
+    ja: 'インターフェースの色',
+    zh: '界面颜色',
+    fr: 'Couleurs d\'Interface'
+  },
+  currentTheme: {
+    en: 'Current Theme',
+    pt: 'Tema Atual',
+    de: 'Aktuelles Thema',
+    es: 'Tema Actual',
+    ru: 'Текущая тема',
+    ja: '現在のテーマ',
+    zh: '当前主题',
+    fr: 'Thème Actuel'
   },
   backgroundColor: {
     en: 'Background Color',
@@ -1112,7 +2209,27 @@ const translations: Translations = {
     zh: '同步界面和阅读颜色',
     fr: 'Synchroniser les Couleurs d\'Interface et de Lecture'
   },
+    syncInterfaceWithReading: {
+    en: 'Sync Interface and Reading Colors',
+    pt: 'Sincronizar Cores da Interface e Leitura',
+    de: 'Interface- und Lesefarben synchronisieren',
+    es: 'Sincronizar Colores de Interfaz y Lectura',
+    ru: 'Синхронизировать Цвета Интерфейса и Чтения',
+    ja: 'インターフェースと読書の色を同期',
+    zh: '同步界面和阅读颜色',
+    fr: 'Synchroniser les Couleurs d\'Interface et de Lecture'
+  },
   syncDescription: {
+    en: 'When enabled: Interface theme automatically matches reading color theme. Changes to either reading or interface colors will sync both themes (default enabled)',
+    pt: 'Quando ativado: O tema da interface corresponde automaticamente ao tema de cores de leitura. Mudanças nas cores de leitura ou interface sincronizarão ambos os temas (padrão ativado)',
+    de: 'Wenn aktiviert: Das Interface-Thema passt automatisch zum Lesefarbthema. Änderungen an Lese- oder Interface-Farben synchronisieren beide Themen (standardmäßig aktiviert)',
+    es: 'Cuando está habilitado: El tema de interfaz coincide automáticamente con el tema de colores de lectura. Los cambios en los colores de lectura o interfaz sincronizarán ambos temas (habilitado por defecto)',
+    ru: 'При включении: Тема интерфейса автоматически соответствует цветовой теме чтения. Изменения цветов чтения или интерфейса синхронизируют обе темы (включено по умолчанию)',
+    ja: '有効にすると：インターフェーステーマが読書カラーテーマに自動的に一致します。読書またはインターフェースの色の変更により、両方のテーマが同期されます（デフォルトで有効）',
+    zh: '启用时：界面主题自动匹配阅读颜色主题。对阅读或界面颜色的更改将同步两个主题（默认启用）',
+    fr: 'Lorsqu\'activé : Le thème d\'interface correspond automatiquement au thème de couleurs de lecture. Les modifications des couleurs de lecture ou d\'interface synchroniseront les deux thèmes (activé par défaut)'
+  },
+    syncInterfaceDescription: {
     en: 'When enabled: Interface theme automatically matches reading color theme. Changes to either reading or interface colors will sync both themes (default enabled)',
     pt: 'Quando ativado: O tema da interface corresponde automaticamente ao tema de cores de leitura. Mudanças nas cores de leitura ou interface sincronizarão ambos os temas (padrão ativado)',
     de: 'Wenn aktiviert: Das Interface-Thema passt automatisch zum Lesefarbthema. Änderungen an Lese- oder Interface-Farben synchronisieren beide Themen (standardmäßig aktiviert)',
@@ -1496,6 +2613,8 @@ const translations: Translations = {
   }
 };
 
+
+
 // Get browser language
 const getBrowserLanguage = (): Exclude<Language, 'auto'> => {
   const lang = navigator.language.toLowerCase();
@@ -1565,17 +2684,17 @@ export const getTranslation = (key: string): string => {
   return translation[effectiveLang] || translation.en || key;
 };
 
-// Get all available languages
+// Get all available languages with native names
 export const getAvailableLanguages = (): Array<{ code: Language; name: string }> => {
   return [
     { code: 'auto', name: getTranslation('automatic') },
-    { code: 'en', name: getTranslation('english') },
-    { code: 'pt', name: getTranslation('portuguese') },
-    { code: 'de', name: getTranslation('german') },
-    { code: 'es', name: getTranslation('spanish') },
-    { code: 'ru', name: getTranslation('russian') },
-    { code: 'ja', name: getTranslation('japanese') },
-    { code: 'zh', name: getTranslation('chinese') },
-    { code: 'fr', name: getTranslation('french') }
+    { code: 'en', name: 'English' },
+    { code: 'pt', name: 'Português' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'es', name: 'Español' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'ja', name: '日本語' },
+    { code: 'zh', name: '中文' },
+    { code: 'fr', name: 'Français' }
   ];
 };

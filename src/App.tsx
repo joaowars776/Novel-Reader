@@ -3,6 +3,7 @@ import { Library } from './components/Library';
 import { ReaderContainer } from './components/Reader/ReaderContainer';
 import { initDB, logError } from './utils/storage';
 import { initializeLanguage } from './utils/translations';
+import { dragDropController } from './utils/dragDropController';
 import type { Book } from './types';
 
 function App() {
@@ -10,12 +11,15 @@ function App() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
 
-  // Initialize the database and language
+  // Initialize the database, language, and drag drop controller
   useEffect(() => {
     const init = async () => {
       try {
         // Initialize language first
         initializeLanguage();
+        
+        // Initialize drag drop controller to prevent unwanted popups
+        dragDropController.init();
         
         await initDB();
         setIsInitialized(true);
@@ -29,6 +33,12 @@ function App() {
     };
 
     init();
+
+    // Cleanup on unmount
+    return () => {
+      // Note: We don't destroy the singleton dragDropController here
+      // as it should persist for the entire app lifecycle
+    };
   }, []);
 
   // Handle browser navigation and URL parsing

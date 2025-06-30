@@ -151,7 +151,7 @@ export const INTERFACE_THEMES: InterfaceTheme[] = [
     }
   },
   {
-    id: 'high-contrast',
+    id: 'highcontrast',
     name: 'High Contrast',
     description: 'Maximum contrast for enhanced accessibility',
     colors: {
@@ -430,7 +430,7 @@ export const COLOR_THEMES: ColorTheme[] = [
     }
   },
   {
-    id: 'high-contrast',
+    id: 'highcontrast',
     name: 'High Contrast',
     description: 'Maximum contrast for accessibility',
     colors: {

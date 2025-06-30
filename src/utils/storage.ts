@@ -1,9 +1,9 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import { INTERFACE_THEMES, COLOR_THEMES, getInterfaceTheme } from './themes';
-import type { Book, ReadingPreferences, Bookmark, ReadingStats } from '../types';
+import type { Book, ReadingPreferences, Bookmark, ReadingStats, ReadingSession } from '../types';
 
 const DB_NAME = 'EBookReaderDB';
-const DB_VERSION = 3;
+const DB_VERSION = 4; // Incremented for reading sessions
 
 let db: IDBPDatabase | null = null;
 
@@ -89,11 +89,26 @@ export const initDB = async () => {
           coversStore.createIndex('createdAt', 'createdAt');
         }
 
-        // Navigation history store (new in version 3)
+        // Navigation history store
         if (!db.objectStoreNames.contains('navigation')) {
           const navStore = db.createObjectStore('navigation', { keyPath: 'id' });
           navStore.createIndex('bookId', 'bookId');
           navStore.createIndex('timestamp', 'timestamp');
+        }
+
+        // Reading sessions store (new in version 4)
+        if (!db.objectStoreNames.contains('readingSessions')) {
+          const sessionsStore = db.createObjectStore('readingSessions', { keyPath: 'id' });
+          sessionsStore.createIndex('bookId', 'bookId');
+          sessionsStore.createIndex('startTime', 'startTime');
+          sessionsStore.createIndex('chapterIndex', 'chapterIndex');
+        }
+
+        // Error logs store
+        if (!db.objectStoreNames.contains('errorLogs')) {
+          const errorStore = db.createObjectStore('errorLogs', { keyPath: 'id', autoIncrement: true });
+          errorStore.createIndex('type', 'type');
+          errorStore.createIndex('timestamp', 'timestamp');
         }
       },
     });
@@ -124,23 +139,7 @@ export const logError = async (type: string, error: any, context?: any) => {
   
   try {
     const database = await initDB();
-    if (!database.objectStoreNames.contains('errorLogs')) {
-      // Create error logs store if it doesn't exist
-      const version = database.version + 1;
-      database.close();
-      const newDb = await openDB(DB_NAME, version, {
-        upgrade(db) {
-          if (!db.objectStoreNames.contains('errorLogs')) {
-            const errorStore = db.createObjectStore('errorLogs', { keyPath: 'id', autoIncrement: true });
-            errorStore.createIndex('type', 'type');
-            errorStore.createIndex('timestamp', 'timestamp');
-          }
-        }
-      });
-      await newDb.put('errorLogs', errorLog);
-    } else {
-      await database.put('errorLogs', errorLog);
-    }
+    await database.put('errorLogs', errorLog);
   } catch (logError) {
     console.error('Failed to log error to database:', logError);
   }
@@ -180,7 +179,7 @@ export const getBook = async (id: string): Promise<Book | undefined> => {
 export const deleteBook = async (id: string) => {
   try {
     const database = await initDB();
-    const tx = database.transaction(['books', 'bookmarks', 'chapters', 'covers', 'navigation'], 'readwrite');
+    const tx = database.transaction(['books', 'bookmarks', 'chapters', 'covers', 'navigation', 'readingSessions'], 'readwrite');
     
     await Promise.all([
       tx.objectStore('books').delete(id),
@@ -193,6 +192,9 @@ export const deleteBook = async (id: string) => {
       tx.objectStore('covers').delete(id),
       tx.objectStore('navigation').index('bookId').getAllKeys(id).then(keys =>
         Promise.all(keys.map(key => tx.objectStore('navigation').delete(key)))
+      ),
+      tx.objectStore('readingSessions').index('bookId').getAllKeys(id).then(keys =>
+        Promise.all(keys.map(key => tx.objectStore('readingSessions').delete(key)))
       )
     ]);
   } catch (error) {
