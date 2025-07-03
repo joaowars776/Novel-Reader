@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
-import { Upload, BookOpen, X, Globe } from 'lucide-react';
-import { createBookFromFile, EpubParser } from '../utils/epub-parser';
+import { Upload, BookOpen, X, Globe, FileText, File } from 'lucide-react';
+import { createBookFromSupportedFile, getSupportedFileTypes, getFileType, getFileTypeDisplayName } from '../utils/file-parser';
 import { saveBook, saveCoverImage } from '../utils/storage';
 import { LanguageSelector } from './LanguageSelector';
 import { getTranslation } from '../utils/translations';
@@ -19,10 +19,12 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const dropZoneRef = useRef<HTMLDivElement>(null);
 
+  const supportedTypes = getSupportedFileTypes();
+
   // Initialize drag drop controller with custom config for this component
   const { enableDragForElement, disableDragForElement } = useDragDropController({
     enableDragOverlay: false,
-    allowedFileTypes: ['.epub'],
+    allowedFileTypes: supportedTypes,
     preventDefaultDragBehavior: true
   });
 
@@ -34,8 +36,10 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
   }, [enableDragForElement]);
 
   const processFile = useCallback(async (file: File) => {
-    if (!file.name.toLowerCase().endsWith('.epub')) {
-      setError(getTranslation('pleaseSelectEpub'));
+    const fileType = getFileType(file);
+    
+    if (!fileType) {
+      setError(getTranslation('pleaseSelectSupportedFile'));
       return;
     }
 
@@ -43,7 +47,7 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
     setError(null);
 
     try {
-      const bookData = await createBookFromFile(file);
+      const bookData = await createBookFromSupportedFile(file);
       const book: Book = {
         id: `book-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         ...bookData
@@ -52,10 +56,21 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
       // Cache cover image if available
       if (book.cover) {
         try {
-          const parser = new EpubParser(file);
-          await parser.initialize();
-          await parser.cacheCoverImage(book.id);
-          parser.destroy();
+          // For PDF files, the cover is already generated and cached
+          // For EPUB files, we need to use the existing caching logic
+          if (book.fileType === 'epub') {
+            const { EpubParser } = await import('../utils/epub-parser');
+            const parser = new EpubParser(file);
+            await parser.initialize();
+            await parser.cacheCoverImage(book.id);
+            parser.destroy();
+          } else if (book.fileType === 'pdf') {
+            const { PdfParser } = await import('../utils/pdf-parser');
+            const parser = new PdfParser(file);
+            await parser.initialize();
+            await parser.cacheCoverImage(book.id);
+            parser.destroy();
+          }
         } catch (coverError) {
           console.warn('Could not cache cover image:', coverError);
         }
@@ -65,8 +80,8 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
       onBookAdded(book);
       onClose?.();
     } catch (error) {
-      console.error('Error processing EPUB file:', error);
-      setError(getTranslation('failedToProcessEpub'));
+      console.error('Error processing file:', error);
+      setError(getTranslation('failedToProcessFile'));
     } finally {
       setIsUploading(false);
     }
@@ -78,14 +93,17 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
     setIsDragOver(false);
 
     const files = Array.from(e.dataTransfer?.files || []);
-    const epubFile = files.find(file => file.name.toLowerCase().endsWith('.epub'));
+    const supportedFile = files.find(file => {
+      const fileName = file.name.toLowerCase();
+      return supportedTypes.some(type => fileName.endsWith(type));
+    });
 
-    if (epubFile) {
-      processFile(epubFile);
+    if (supportedFile) {
+      processFile(supportedFile);
     } else {
-      setError(getTranslation('pleaseDropEpub'));
+      setError(getTranslation('pleaseDropSupportedFile'));
     }
-  }, [processFile]);
+  }, [processFile, supportedTypes]);
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -119,6 +137,10 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
     e.stopPropagation();
     setIsDragOver(true);
   }, []);
+
+  const getSupportedFormatsText = () => {
+    return supportedTypes.map(type => type.toUpperCase().replace('.', '')).join(' & ');
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -155,7 +177,7 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
         <div className="text-center mb-6 mt-8">
           <BookOpen className="w-12 h-12 text-blue-600 mx-auto mb-3" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">{getTranslation('addNewBook')}</h2>
-          <p className="text-gray-600">{getTranslation('uploadEpubFile')}</p>
+          <p className="text-gray-600">{getTranslation('uploadSupportedFile')}</p>
         </div>
 
         <div
@@ -175,7 +197,7 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
           
           <div className="mb-4">
             <p className="text-lg font-medium text-gray-900 mb-2">
-              {isDragOver ? getTranslation('dropEpubHere') : getTranslation('dragAndDropEpub')}
+              {isDragOver ? getTranslation('dropFileHere') : getTranslation('dragAndDropFile')}
             </p>
             <p className="text-gray-600">{getTranslation('or')}</p>
           </div>
@@ -183,7 +205,7 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
           <label className="inline-block">
             <input
               type="file"
-              accept=".epub"
+              accept={supportedTypes.join(',')}
               onChange={handleFileSelect}
               className="hidden"
               disabled={isUploading}
@@ -200,8 +222,23 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
           </div>
         )}
 
+        {/* Supported Formats */}
+        <div className="mt-4">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">{getTranslation('supportedFormats')}:</h3>
+          <div className="flex gap-2 justify-center">
+            <div className="flex items-center gap-1 px-3 py-1 bg-blue-50 rounded-full">
+              <FileText className="w-4 h-4 text-blue-600" />
+              <span className="text-xs font-medium text-blue-700">EPUB</span>
+            </div>
+            <div className="flex items-center gap-1 px-3 py-1 bg-red-50 rounded-full">
+              <File className="w-4 h-4 text-red-600" />
+              <span className="text-xs font-medium text-red-700">PDF</span>
+            </div>
+          </div>
+        </div>
+
         <div className="mt-4 text-xs text-gray-500 text-center">
-          {getTranslation('supportedFormat')}
+          {getTranslation('supportedFormatsDescription')}
         </div>
       </div>
     </div>

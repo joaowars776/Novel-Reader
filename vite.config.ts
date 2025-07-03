@@ -7,4 +7,11 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  define: {
+    // Fix for PDF.js worker
+    global: 'globalThis',
+  },
+  worker: {
+    format: 'es'
+  }
 });

@@ -10,7 +10,7 @@ import { useReadingProgress } from '../../hooks/useReadingProgress';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { getPreferences, savePreferences, saveNavigationState, logError } from '../../utils/storage';
 import { applyInterfaceTheme, getInterfaceTheme } from '../../utils/themes';
-import { EpubParser } from '../../utils/epub-parser';
+import { createParserForFile } from '../../utils/file-parser';
 import { startReadingSession, endReadingSession, changeChapter, updateReadingActivity } from '../../utils/reading-tracker';
 import type { Book, Chapter, ReadingPreferences, Bookmark, SearchResult } from '../../types';
 
@@ -30,7 +30,7 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isFullscreenReading, setIsFullscreenReading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [parser, setParser] = useState<EpubParser | null>(null);
+  const [parser, setParser] = useState<any>(null);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [tapCount, setTapCount] = useState(0);
 
@@ -75,7 +75,7 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
     return () => window.removeEventListener('popstate', handlePopState);
   }, [book.id]);
 
-  // Initialize epub parser and load chapters
+  // Initialize parser and load chapters
   useEffect(() => {
     const initializeReader = async () => {
       try {
@@ -86,17 +86,18 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
           throw new Error('Invalid or corrupted file');
         }
 
-        const epubParser = new EpubParser(book.file);
-        await epubParser.initialize();
+        // Create appropriate parser based on file type
+        const fileParser = createParserForFile(book.file);
+        await fileParser.initialize();
         
-        const chaptersData = await epubParser.getAllChapters();
+        const chaptersData = await fileParser.getAllChapters();
         
         if (!chaptersData || chaptersData.length === 0) {
-          throw new Error('No chapters found in EPUB file');
+          throw new Error('No chapters found in file');
         }
         
         setChapters(chaptersData);
-        setParser(epubParser);
+        setParser(fileParser);
 
         // Load user preferences
         const userPrefs = await getPreferences();
@@ -126,7 +127,8 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
         logError('READER_INIT_FAILED', error, { 
           bookId: book.id, 
           fileSize: book.file?.size,
-          fileName: book.file?.name 
+          fileName: book.file?.name,
+          fileType: book.fileType 
         });
         
         // Show user-friendly error and return to library

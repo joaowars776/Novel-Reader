@@ -9,6 +9,7 @@ export interface Book {
   progress: number;
   currentChapter: number;
   scrollPosition: number;
+  fileType?: 'epub' | 'pdf'; // Add file type support
 }
 
 export interface Chapter {

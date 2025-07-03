@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, BookOpen, Clock, MoreVertical, Trash2, Globe, BarChart3, Library as LibraryIcon, Grid3X3, List, Upload, Settings } from 'lucide-react';
+import { Plus, Search, BookOpen, Clock, MoreVertical, Trash2, Globe, BarChart3, Library as LibraryIcon, Grid3X3, List, Upload, Settings, FileText, File } from 'lucide-react';
 import { getBooks, deleteBook, getCoverImage, getPreferences, savePreferences } from '../utils/storage';
 import { BookUploader } from './BookUploader';
 import { LanguageSelector } from './LanguageSelector';
@@ -8,6 +8,7 @@ import { HomePageSettings } from './HomePageSettings';
 import { getTranslation, initializeLanguage } from '../utils/translations';
 import { applyInterfaceTheme, getInterfaceTheme } from '../utils/themes';
 import { useDragDropController } from '../hooks/useDragDropController';
+import { getSupportedFileTypes, getFileType, getFileTypeDisplayName } from '../utils/file-parser';
 import type { Book, ReadingPreferences } from '../types';
 
 interface LibraryProps {
@@ -31,10 +32,12 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [preferences, setPreferences] = useState<ReadingPreferences | null>(null);
 
+  const supportedTypes = getSupportedFileTypes();
+
   // Initialize drag drop controller to prevent unwanted popups
   const { enableDragForElement } = useDragDropController({
     enableDragOverlay: false,
-    allowedFileTypes: ['.epub'],
+    allowedFileTypes: supportedTypes,
     preventDefaultDragBehavior: true
   });
 
@@ -108,16 +111,20 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // Check if the dragged items contain EPUB files
+    // Check if the dragged items contain supported files
     const items = Array.from(e.dataTransfer?.items || []);
-    const hasEpubFile = items.some(item => 
-      item.kind === 'file' && item.type === 'application/epub+zip'
-    );
+    const hasSupportedFile = items.some(item => {
+      if (item.kind === 'file') {
+        const fileName = item.getAsFile()?.name?.toLowerCase() || '';
+        return supportedTypes.some(type => fileName.endsWith(type));
+      }
+      return false;
+    });
     
-    if (hasEpubFile) {
+    if (hasSupportedFile) {
       setIsDragOver(true);
     }
-  }, []);
+  }, [supportedTypes]);
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -138,12 +145,15 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
     setIsDragOver(false);
 
     const files = Array.from(e.dataTransfer?.files || []);
-    const epubFile = files.find(file => file.name.toLowerCase().endsWith('.epub'));
+    const supportedFile = files.find(file => {
+      const fileName = file.name.toLowerCase();
+      return supportedTypes.some(type => fileName.endsWith(type));
+    });
 
-    if (epubFile) {
+    if (supportedFile) {
       setIsUploaderOpen(true);
     }
-  }, []);
+  }, [supportedTypes]);
 
   const handleBookAdded = async (newBook: Book) => {
     setBooks(prev => [newBook, ...prev]);
@@ -202,6 +212,17 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
     if (diffInHours < 24) return `${Math.round(diffInHours)}${getTranslation('hoursAgo')}`;
     if (diffInHours < 168) return `${Math.round(diffInHours / 24)}${getTranslation('daysAgo')}`;
     return date.toLocaleDateString();
+  };
+
+  const getFileTypeIcon = (fileType?: string) => {
+    switch (fileType) {
+      case 'epub':
+        return <FileText className="w-4 h-4 text-blue-600" />;
+      case 'pdf':
+        return <File className="w-4 h-4 text-red-600" />;
+      default:
+        return <BookOpen className="w-4 h-4 text-gray-600" />;
+    }
   };
 
   // Calculate grid items needed (books + exactly one placeholder)
@@ -270,12 +291,22 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {/* Controlled drag overlay - only shows for valid EPUB files */}
+      {/* Controlled drag overlay - only shows for valid files */}
       {isDragOver && (
         <div className="fixed inset-0 bg-blue-500 bg-opacity-20 z-50 flex items-center justify-center pointer-events-none">
           <div className="bg-white rounded-xl p-8 shadow-xl border-2 border-dashed border-blue-500">
             <Upload className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-            <p className="text-xl font-semibold text-gray-900">{getTranslation('dropEpubHere')}</p>
+            <p className="text-xl font-semibold text-gray-900">{getTranslation('dropFileHere')}</p>
+            <div className="flex gap-2 justify-center mt-2">
+              <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 rounded">
+                <FileText className="w-3 h-3 text-blue-600" />
+                <span className="text-xs text-blue-700">EPUB</span>
+              </div>
+              <div className="flex items-center gap-1 px-2 py-1 bg-red-50 rounded">
+                <File className="w-3 h-3 text-red-600" />
+                <span className="text-xs text-red-700">PDF</span>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -478,6 +509,16 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
                     <span className="text-xs text-center px-2 mt-1">
                       {getTranslation('or')} {getTranslation('selectEbook')}
                     </span>
+                    <div className="flex gap-1 mt-2">
+                      <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 rounded text-xs">
+                        <FileText className="w-3 h-3 text-blue-600" />
+                        <span className="text-blue-700">EPUB</span>
+                      </div>
+                      <div className="flex items-center gap-1 px-2 py-1 bg-red-50 rounded text-xs">
+                        <File className="w-3 h-3 text-red-600" />
+                        <span className="text-red-700">PDF</span>
+                      </div>
+                    </div>
                   </div>
                 );
               }
@@ -512,6 +553,14 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
                     {/* Fallback cover */}
                     <div className={`fallback-cover w-full h-full flex items-center justify-center ${(coverUrls[book.id] || book.cover) ? 'hidden' : ''}`}>
                       <BookOpen className="w-16 h-16 text-gray-400" />
+                    </div>
+
+                    {/* File type indicator */}
+                    <div className="absolute top-2 left-2">
+                      <div className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+                        {getFileTypeIcon(book.fileType)}
+                        <span>{getFileTypeDisplayName(book.fileType || 'epub')}</span>
+                      </div>
                     </div>
 
                     {/* Actions menu */}
@@ -607,13 +656,23 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
                 >
                   <Upload className="w-6 h-6 text-gray-400 group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h3 className="font-semibold mb-1" style={{ color: interfaceStyles.color, opacity: 0.7 }}>
                     {getTranslation('selectEbook')}
                   </h3>
-                  <p className="text-sm" style={{ color: interfaceStyles.color, opacity: 0.5 }}>
+                  <p className="text-sm mb-2" style={{ color: interfaceStyles.color, opacity: 0.5 }}>
                     {getTranslation('dragAndDropEbook')}
                   </p>
+                  <div className="flex gap-2">
+                    <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 rounded text-xs">
+                      <FileText className="w-3 h-3 text-blue-600" />
+                      <span className="text-blue-700">EPUB</span>
+                    </div>
+                    <div className="flex items-center gap-1 px-2 py-1 bg-red-50 rounded text-xs">
+                      <File className="w-3 h-3 text-red-600" />
+                      <span className="text-red-700">PDF</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -631,7 +690,7 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
                   <div className="flex items-start gap-4">
                     {/* Book Cover Thumbnail */}
                     <div 
-                      className="w-16 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer"
+                      className="w-16 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer relative"
                       onClick={() => onOpenBook(book)}
                     >
                       {coverUrls[book.id] || book.cover ? (
@@ -650,6 +709,13 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
                       <div className={`fallback-cover w-full h-full flex items-center justify-center ${(coverUrls[book.id] || book.cover) ? 'hidden' : ''}`}>
                         <BookOpen className="w-6 h-6 text-gray-400" />
                       </div>
+
+                      {/* File type indicator */}
+                      <div className="absolute bottom-1 right-1">
+                        <div className="bg-black bg-opacity-75 text-white p-1 rounded text-xs">
+                          {getFileTypeIcon(book.fileType)}
+                        </div>
+                      </div>
                     </div>
 
                     {/* Book Details */}
@@ -657,9 +723,18 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
                       className="flex-1 cursor-pointer"
                       onClick={() => onOpenBook(book)}
                     >
-                      <h3 className="font-semibold mb-1 text-lg" style={{ color: interfaceStyles.color }}>
-                        {book.title}
-                      </h3>
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className="font-semibold text-lg" style={{ color: interfaceStyles.color }}>
+                          {book.title}
+                        </h3>
+                        <div className="flex items-center gap-1 px-2 py-1 rounded text-xs" style={{ backgroundColor: book.fileType === 'pdf' ? '#fef2f2' : '#eff6ff' }}>
+                          {getFileTypeIcon(book.fileType)}
+                          <span style={{ color: book.fileType === 'pdf' ? '#dc2626' : '#2563eb' }}>
+                            {getFileTypeDisplayName(book.fileType || 'epub')}
+                          </span>
+                        </div>
+                      </div>
+                      
                       <p className="mb-2" style={{ color: interfaceStyles.color, opacity: 0.7 }}>
                         by {book.author}
                       </p>
