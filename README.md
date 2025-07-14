@@ -1,3 +1,6 @@
+## See the Releases area, new updates
+
+
 ## WUXIA / XIANXIA READERS, THIS IS FOR YOU'LL (WORK WITH ANY EPUB, OF ANY SUBJECT)
 
 I've created this project in bolt.new.
@@ -20,7 +23,7 @@ Discord: joaowars776
 
 ## What it have?:
 
-🔹Interface languages: Portuguese, Chinese, English, French, Japanese, Spanish, German and Russian (Default: Automatic)
+🔹Interface languages: Portuguese, Chinese, English, French, Japanese, Spanish, German, Hindi, Italian, Korean and Russian (Default: Automatic)
 
 🔹Multiple visual themes: Choose your themes that are ideal for reading in light, dark, nighttime, or eye protection environments.
 
