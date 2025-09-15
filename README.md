@@ -37,6 +37,6 @@ Access at: http://localhost:5173/
 
 Copy the IP that will show into your phone’s browser or even console or TV browser. Done!
 ![{0ACCEFCF-249E-4AFB-9316-C4FFF4641C73}](https://github.com/user-attachments/assets/81bd814e-d28d-4a44-b7e6-da5eea06914a)<br>
-(- Network one)
+- Network one
 
 ### See the Releases area to see all the changelogs maded
