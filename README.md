@@ -11,17 +11,17 @@ Thanks to browser translation (Chrome, Firefox, etc.), you can instantly read an
 
 ## ✨ Features
   🌐 10+ Languages (Portuguese, English, Chinese, French, Japanese, Spanish, German, Hindi, Italian, Korean, Russian, Swahili, Turkish…)<br>
-  🎨 Themes: Light, dark, night mode, and eye-protection themes<br>
-  🔠 Text Controls: Font size, typeface, fullscreen mode, mobile mode<br>
-  📌 Bookmarks: One-click save or custom names, now integrated in Table of Contents<br>
+  🎨 Themes: Light, dark, night mode, eye-protection themes and some more<br>
+  🔠 Text Controls: Font size, Text Spacing, Typeface, Fullscreen mode, Mobile mode and more<br>
+  📌 Bookmarks: One-click save or custom names, integrated in Table of Contents (Chapter show area)<br>
   📊 My Statistics: Track reading time, chapters read, history, average pace<br>
-  📂 Add Books: Drag-and-drop or select a folder with multiple .epub / .pdf<br>
-  🧭 Search: Search inside the current chapter or across the entire book<br>
+  📂 Add Books: Select a folder with multiple .epub / .pdf and enjoy!<br>
+  🧭 Search: Search any Text/Word inside the current chapter or across the entire book<br>
   🗂 Reading History: Quickly continue where you left off<br>
   🔄 Auto-Save: Settings + progress cached locally (You can use a Portable Browser for never loose that if you care)<br>
   🗣 Read Aloud (TTS): Experimental text-to-speech option<br>
   🖥 Offline & Portable: Works without internet, 100% local<br>
-  ⚡ Performance Optimized: Debounced events, GPU-accelerated animations, memory-leak prevention
+  ⚡ Performance Optimized: Debounced events, GPU-accelerated animations, memory-leak prevention and much more
 
 ##
 ## ⚙️ Installation & Usage (necessary: NodeJS)
