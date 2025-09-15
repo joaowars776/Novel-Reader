@@ -1,83 +1,41 @@
-## See the Releases area, new updates
+## 📖 Novel-Reader: ePUB & PDF Reader (Offline, Portable, Multi-Language)
+
+## Wuxia / Xianxia / Xuanhuan Readers, this is for you!
+
+A lightweight, offline, customizable reader for EPUB and PDF — built especially for webnovel and light novel fans.
+I started this project out of love for Wuxia, Xianxia, Xuanhuan and light novels in general. With sites like LightNovelPub shutting down, I realized how fragile access to these stories is — so I built my own solution.
+
+Thanks to browser translation (Chrome, Firefox, etc.), you can instantly read any novel in your language. I personally have 8GB of novels archived and can enjoy them fully translated while offline.
+
+💬 Need help? Message me on Discord: joaowars776 (I already help ~10–20 people/month with some servers & projects).
+
+## ✨ Features
+  🌐 10+ Languages (Portuguese, English, Chinese, French, Japanese, Spanish, German, Hindi, Italian, Korean, Russian, Swahili, Turkish…)<br>
+  🎨 Themes: Light, dark, night mode, and eye-protection themes<br>
+  🔠 Text Controls: Font size, typeface, fullscreen mode, mobile mode<br>
+  📌 Bookmarks: One-click save or custom names, now integrated in Table of Contents<br>
+  📊 My Statistics: Track reading time, chapters read, history, average pace<br>
+  📂 Add Books: Drag-and-drop or select a folder with multiple .epub / .pdf<br>
+  🧭 Search: Search inside the current chapter or across the entire book<br>
+  🗂 Reading History: Quickly continue where you left off<br>
+  🔄 Auto-Save: Settings + progress cached locally (You can use a Portable Browser for never loose that if you care)<br>
+  🗣 Read Aloud (TTS): Experimental text-to-speech option<br>
+  🖥 Offline & Portable: Works without internet, 100% local<br>
+  ⚡ Performance Optimized: Debounced events, GPU-accelerated animations, memory-leak prevention
+
+##
+## ⚙️ Installation & Usage (necessary: NodeJS)
+  # Run on Desktop:
+<pre>npm install</pre>
+<pre>npm run dev</pre>
+Access at: http://localhost:5173/
+# Just a Text Tutorial, you don't need since there's a Install.bat and Start.bat inside
 
 
-## WUXIA / XIANXIA READERS, THIS IS FOR YOU'LL (WORK WITH ANY EPUB, OF ANY SUBJECT)
+ # Run for all devices in Wi-Fi
+<pre>npm install -g serve</pre>
+<pre>serve -s dist</pre>
 
-I've created this project in bolt.new.
-Why did I create this? Simple: because of my love for webnovels/light novels. (Wuxia, Xianxia, Xuanhuan, and similars)
+Copy the IP under - Network into your phone’s browser or even console or TV browser. Done!
 
-When LightNovelPub shut down due to copyright issues, I realized how fragile access to these stories can be if NovelFull broken (I'll not pay, sorry WuxiaWorld).
-
-Fortunately, tools like a Chrome extension that converts full novels from sites like NovelFull into ePUBs still exist.
-And As someone who has nearly 8GB of light novels archived, looks good to have a really good ePUB Reader with the functions ME, MYSELF, want in a website, around anothers functions that maybe someone use
-
-Why Web? Because Firefox has Offline Automatic Translation, and Chrome has Translation too, so, you can read any light novel with ePUB-Webs, because you can automatically translate (8GB ePUBS in English, I use Chrome Extension to en>ptbr, I can read everything in portuguese without difficults, just if the english translation of webnovel is trash, if it's good, will be pretty good in portuguese too)
-
-So I built this site
-
-Need help with setup? Feel free to send message to me on Discord: joaowars776. I’ll gladly assist
-
-#### I'm a private server youtuber (i create tutorials), I help around 10 to 20 peoples per month nowadays (https://youtube.com/joaowars776), so it's not bothering to ask me something, and I'll not request you money, just ask me if you need help, trust bro.
-
-Discord: joaowars776
-
-## What it have?:
-
-🔹Interface languages: Portuguese, Chinese, English, French, Japanese, Spanish, German, Hindi, Italian, Korean and Russian (Default: Automatic)
-
-🔹Multiple visual themes: Choose your themes that are ideal for reading in light, dark, nighttime, or eye protection environments.
-
-🔹Text control: Adjust font size, change typeface, enable full-screen reading mode (with stretched text), normal mode, or mobile-optimized mode.
-
-🔹Customizable interface: Options such as auto-hiding elements for more immersive reading.
-
-🔹Bookmark system: Mark chapters as favorites with one click (quick save option enabled on configuration) or assign custom names to the bookmark.
-
-🔹Scroll button: Quickly jump to the beginning or end of the page. Can be turned on or off as desired (default is off).
-
-🔹Read aloud (experimental): Text-to-speech feature — functional but with limited comprehension at the moment (trash asf to be honest, atleast to me).
-
-🔹Auto-save progress: All settings and the current chapter are cached locally in browser. You can turn off your computer and come back days later — when you open the website, it will load exactly where you left off.
-
-🔹Backup: You can export and import your data (current chapter, configuration, everything)
-
-🔹Offline and Portable: Of course, this is 100% offline and portable. You can download Firefox Portable and Download the Translation you want. If you format your PC, you'll have your cache data saved on Firefox Portable (if you save it on PenDrive, or some partition you created/have around C:/ one you formated. Just need to use the commands below and open the website for the first time to have it 100% portable
-
-🔹Browser Project: What this mean? Means that you can use Automatic Translation from Chrome, Firefox (have Offline Translation) and all other browser, you can read any chinese, spanish, french or any language in this world .epub in your original language for example, thanks to that
-
-## ⚙️ How to Run It
-
-Make sure you have NodeJS installed. (https://nodejs.org/en)
-
-Open a terminal (CMD) in root folder (ePUB-Reader folder, download the zip, unpack on some folder, open and open CMD there).
-
-Run the following commands, in this order:
-
-### <pre>npm install</pre>
-### <pre>npm run dev</pre>
-
-That's it! Your site will launch — fully functional, just like the preview below.
-
-The link to access this website is something like: http://localhost:5173/
-
-https://github.com/user-attachments/assets/3b10f997-150f-4805-8c6d-6b67d11bd292
-
-## Want to run this website on your phone?
-
-Open CMD in root folder (ePUB-Reader folder), in this order:
-
-### <pre>npm install -g serve</pre>
-### <pre>serve -s dist</pre>
-
-And something like this will open:
-
-![{0ACCEFCF-249E-4AFB-9316-C4FFF4641C73}](https://github.com/user-attachments/assets/81bd814e-d28d-4a44-b7e6-da5eea06914a)
-
-Copy the IP shown under ```-Network```
-
-paste it into your phone's browser, and you’ll be able to access the website perfectly.
-Note: Make sure your phone and computer are connected to the same Wi-Fi network.
-
-If you're a fan of Wuxia, Xianxia, or similar light novels, feel free to message me — I have around 7.4GB of novels in ePUB, PDF, and HTML formats.
-
-Discord: joaowars776
+### See the Releases area to see all the changelogs maded
