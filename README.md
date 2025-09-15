@@ -22,7 +22,6 @@ Thanks to browser translation (Chrome, Firefox, etc.), you can instantly read an
   🗣 Read Aloud (TTS): Experimental text-to-speech option<br>
   🖥 Offline & Portable: Works without internet, 100% local<br>
   ⚡ Performance Optimized: Debounced events, GPU-accelerated animations, memory-leak prevention and much more
-
 ##
 ## ⚙️ Installation & Usage (necessary: NodeJS)
   # Run on Desktop:
