@@ -28,7 +28,7 @@ Thanks to browser translation (Chrome, Firefox, etc.), you can instantly read an
 <pre>npm install</pre>
 <pre>npm run dev</pre>
 Access at: http://localhost:5173/
-# Just a Text Tutorial, you don't need since there's a Install.bat and Start.bat inside
+# Just a Text Tutorial, you don't need since there's a Install.bat and Start.bat inside, you just need to Install NodeJS and execute Install.bat for just one time, and after, just use the Start.run
 
 
  # Run for all devices in Wi-Fi
