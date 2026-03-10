@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, X, ArrowRight, BookOpen, FileText } from 'lucide-react';
 import { getTranslation } from '../../utils/translations';
 import type { SearchResult, ReadingPreferences } from '../../types';
@@ -96,15 +97,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
   // Debounced search
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
     if (!query.trim()) {
       onSearch('', searchScope);
       return;
     }
 
     setIsSearching(true);
-    timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       onSearch(query, searchScope);
       setIsSearching(false);
     }, 300);
@@ -165,8 +164,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     return getTranslation('searchIn').toLowerCase() + ' ' + getTranslation('entireBook').toLowerCase();
   }, [searchScope]);
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-20 animate-fade-in">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/50 z-[100] flex items-start justify-center pt-20 animate-fade-in backdrop-blur-sm">
       <div 
         ref={modalRef} 
         className="rounded-xl shadow-xl w-full max-w-2xl mx-4 max-h-[80vh] overflow-hidden animate-scale-in"
@@ -371,6 +370,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

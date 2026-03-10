@@ -67,5 +67,22 @@ export const trReaderInterface = {
   'showingFirstResults': 'İlk sonuçlar gösteriliyor',
   'resultsForOptimal': 'optimum performans için sonuçlar.',
   'tryMoreSpecific': 'Sonuçları daraltmak için daha spesifik arama terimleri kullanmayı deneyin.',
-  'foundResultsFor': 'için bulundu'
+  'foundResultsFor': 'için bulundu',
+  
+  // Shortcuts Modal translations
+  'shortcuts': 'Kısayollar',
+  'action': 'Eylem',
+  'shortcut': 'Kısayol',
+  'nextChapter': 'Sonraki Bölüm',
+  'previousChapter': 'Önceki Bölüm',
+  'toggleMenu': 'İçindekiler',
+  'toggleSettings': 'Ayarlar',
+  'toggleFullscreen': 'Tam Ekran',
+  'increaseFontSize': 'Yazı Tipini Büyüt',
+  'decreaseFontSize': 'Yazı Tipini Küçült',
+  'close': 'Kapat',
+  'totalProgress': 'Toplam İlerleme',
+  'read': 'Okundu',
+  'pdfText': 'Metin',
+  'pdfOriginal': 'Orijinal',
 };

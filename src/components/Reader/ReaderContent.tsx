@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ScrollButtons } from './ScrollButtons';
 import type { Chapter, ReadingPreferences } from '../../types';
@@ -11,6 +11,9 @@ interface ReaderContentProps {
   canGoNext: boolean;
   canGoPrevious: boolean;
   onContentClick?: () => void;
+  pdfMode?: boolean;
+  file?: File;
+  isHeaderMinimized?: boolean;
 }
 
 export const ReaderContent: React.FC<ReaderContentProps> = ({
@@ -20,9 +23,25 @@ export const ReaderContent: React.FC<ReaderContentProps> = ({
   onPreviousChapter,
   canGoNext,
   canGoPrevious,
-  onContentClick
+  onContentClick,
+  pdfMode = false,
+  file,
+  isHeaderMinimized = false
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
+  // Handle PDF URL creation and cleanup
+  useEffect(() => {
+    if (pdfMode && file) {
+      const url = URL.createObjectURL(file);
+      setPdfUrl(url);
+      return () => {
+        URL.revokeObjectURL(url);
+        setPdfUrl(null);
+      };
+    }
+  }, [pdfMode, file]);
 
   // Apply theme styles
   const getThemeStyles = () => {
@@ -90,7 +109,6 @@ export const ReaderContent: React.FC<ReaderContentProps> = ({
   useEffect(() => {
     const updateResponsiveFontSize = () => {
       const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
       
       // Calculate responsive multiplier based on screen size
       let multiplier = 1;
@@ -144,9 +162,14 @@ export const ReaderContent: React.FC<ReaderContentProps> = ({
 
   // Remove chapter title from content
   const getProcessedContent = (content: string) => {
+    if (!content) return '';
+    
+    // Remove specific boilerplate text requested by user
+    const processedContent = content.replace(/If audio player doesn't work, press Stop then Play button again/gi, '');
+    
     // Remove chapter title if it appears at the beginning
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = content;
+    tempDiv.innerHTML = processedContent;
     
     // Remove first h1, h2, or h3 if it matches the chapter title
     const firstHeading = tempDiv.querySelector('h1, h2, h3');
@@ -163,6 +186,21 @@ export const ReaderContent: React.FC<ReaderContentProps> = ({
     
     return tempDiv.innerHTML;
   };
+
+  if (pdfMode && file && pdfUrl) {
+    const pageNumber = chapter?.pageNumber || 1;
+    const headerHeight = isHeaderMinimized ? 0 : 64;
+    return (
+      <div className="w-full transition-all duration-500 bg-gray-100 flex flex-col" style={{ height: `calc(100vh - ${headerHeight}px)` }}>
+        <iframe
+          src={`${pdfUrl}#page=${pageNumber}&toolbar=1&view=FitH`}
+          className="w-full h-full border-none"
+          title="PDF Viewer"
+          key={`${pdfUrl}-${pageNumber}`} // Force reload when page changes
+        />
+      </div>
+    );
+  }
 
   if (!chapter) {
     return (

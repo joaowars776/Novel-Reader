@@ -5,8 +5,6 @@ import React, { useRef, useEffect } from 'react';
       getCurrentLanguage, 
       setLanguage, 
       getTranslation,
-      isDefaultBrowserLanguage,
-      getDefaultBrowserLanguageName, // Keep this for potential future use or if the warning is re-added elsewhere
       getDefaultBrowserLanguageCode // New function to get the code
     } from '../utils/translations';
     import type { Language } from '../utils/translations';

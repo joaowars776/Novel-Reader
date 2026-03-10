@@ -69,5 +69,22 @@ export const hiReaderInterface = {
   'showingFirstResults': 'पहले',
   'resultsForOptimal': 'परिणाम इष्टतम प्रदर्शन के लिए दिखा रहे हैं।',
   'tryMoreSpecific': 'परिणामों को कम करने के लिए अधिक विशिष्ट खोज शब्दों का उपयोग करने का प्रयास करें।',
-  'foundResultsFor': 'के लिए'
+  'foundResultsFor': 'के लिए',
+  
+  // Shortcuts Modal translations
+  'shortcuts': 'शॉर्टकट',
+  'action': 'क्रिया',
+  'shortcut': 'शॉर्टकट',
+  'nextChapter': 'अगला अध्याय',
+  'previousChapter': 'पिछला अध्याय',
+  'toggleMenu': 'विषय-सूची',
+  'toggleSettings': 'सेटिंग्स',
+  'toggleFullscreen': 'पूर्ण स्क्रीन',
+  'increaseFontSize': 'फ़ॉन्ट आकार बढ़ाएं',
+  'decreaseFontSize': 'फ़ॉन्ट आकार घटाएं',
+  'close': 'बंद करें',
+  'totalProgress': 'कुल प्रगति',
+  'read': 'पढ़ा गया',
+  'pdfText': 'पाठ',
+  'pdfOriginal': 'मूल',
 };

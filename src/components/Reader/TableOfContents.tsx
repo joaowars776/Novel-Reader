@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useMemo, useCallback, useState } from 'react';
-import { X, BookOpen, Bookmark } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { X, BookOpen, Bookmark, CheckCircle2 } from 'lucide-react';
 import { getTranslation } from '../../utils/translations';
-import { getBookmarks } from '../../utils/storage';
+import { getBookmarks, getNavigationHistory } from '../../utils/storage';
 import type { Chapter, ReadingPreferences, Bookmark as BookmarkType } from '../../types';
 
 interface TableOfContentsProps {
@@ -23,6 +24,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
 }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [bookmarkedChapters, setBookmarkedChapters] = useState<Set<number>>(new Set());
+  const [visitedChapters, setVisitedChapters] = useState<Set<number>>(new Set());
   const [isLoadingBookmarks, setIsLoadingBookmarks] = useState(true);
 
   // Memoize interface styles to prevent recalculation
@@ -75,7 +77,23 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
       }
     };
 
+    const loadHistory = async () => {
+      if (!bookId) return;
+
+      try {
+        const history = await getNavigationHistory(bookId);
+        const visitedIndices = new Set<number>();
+        history.forEach((entry: { chapterIndex: number }) => {
+          visitedIndices.add(entry.chapterIndex);
+        });
+        setVisitedChapters(visitedIndices);
+      } catch (error) {
+        console.error('Error loading history for TOC:', error);
+      }
+    };
+
     loadBookmarks();
+    loadHistory();
   }, [bookId]);
 
   // Listen for bookmark changes to update indicators in real-time
@@ -127,9 +145,19 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   const hasBookmarks = useCallback((chapterIndex: number): boolean => {
     return bookmarkedChapters.has(chapterIndex);
   }, [bookmarkedChapters]);
+
+  // Check if a chapter has been visited
+  const isVisited = useCallback((chapterIndex: number): boolean => {
+    return visitedChapters.has(chapterIndex);
+  }, [visitedChapters]);
+
+  const totalProgress = useMemo(() => {
+    if (chapters.length === 0) return 0;
+    return Math.round(((currentChapterIndex + 1) / chapters.length) * 100);
+  }, [currentChapterIndex, chapters.length]);
   	
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex animate-fade-in">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/50 z-[100] flex animate-fade-in backdrop-blur-sm">
       {/* Sidebar */}
       <div 
         ref={sidebarRef} 
@@ -177,12 +205,13 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
               {chapters.map((chapter, index) => {
                 const isCurrentChapter = index === currentChapterIndex;
                 const chapterHasBookmarks = hasBookmarks(index);
+                const chapterIsVisited = isVisited(index);
                 
                 return (
                   <button
                     key={chapter.id}
                     onClick={() => onChapterSelect(index)}
-                    className={`w-full text-left p-3 rounded-lg mb-1 transition-all duration-300 relative
+                    className={`w-full text-left p-3 rounded-lg mb-1 transition-all duration-300 relative group/item
                       ${isCurrentChapter
                         ? 'bg-blue-100 dark:bg-blue-900/20 shadow-md' // More prominent for current
                         : 'hover:bg-gray-100 hover:bg-opacity-10' // Subtle hover
@@ -195,55 +224,67 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
                     }}
                   >
                     <div className="flex items-start gap-3">
-                      <span className={`text-sm font-medium mt-0.5 flex-shrink-0`}
-                        style={{ 
-                          color: isCurrentChapter ? '#007BFF' : interfaceStyles.color,
-                          opacity: isCurrentChapter ? 1 : 0.6
-                        }}
-                      >
-                        {index + 1}
-                      </span>
+                      <div className="flex flex-col items-center gap-1 mt-1">
+                        {chapterIsVisited && !isCurrentChapter && (
+                          <CheckCircle2 className="w-5 h-5 text-green-500 opacity-80" />
+                        )}
+                        {!chapterIsVisited && !isCurrentChapter && (
+                          <div className="w-5 h-5 rounded-full border-2 border-current opacity-20" />
+                        )}
+                        {isCurrentChapter && (
+                          <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                          </div>
+                        )}
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <h3 className={`font-medium mb-1 break-words flex-1`}
-                            style={{ color: isCurrentChapter ? '#007BFF' : interfaceStyles.color }}
+                            style={{ 
+                              color: isCurrentChapter ? '#007BFF' : interfaceStyles.color,
+                              opacity: chapterIsVisited || isCurrentChapter ? 1 : 0.7
+                            }}
                           >
                             {chapter.title}
                           </h3>
                           
-                          {/* Bookmark Indicator */}
-                          {chapterHasBookmarks && !isLoadingBookmarks && (
-                            <div 
-                              className="flex-shrink-0 ml-2 mt-0.5"
-                              style={bookmarkIndicatorStyles}
-                              title={getTranslation('bookmark')}
-                              aria-label={`Chapter ${index + 1} has bookmarks`}
-                            >
-                              <Bookmark 
-                                className="w-4 h-4 fill-current" 
-                                style={{ 
-                                  filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))'
-                                }}
-                              />
-                            </div>
-                          )}
-                          
-                          {/* Loading indicator for bookmarks */}
-                          {isLoadingBookmarks && (
-                            <div className="flex-shrink-0 ml-2 mt-0.5">
+                          <div className="flex items-center gap-1">
+                            {/* Bookmark Indicator */}
+                            {chapterHasBookmarks && !isLoadingBookmarks && (
                               <div 
-                                className="w-4 h-4 rounded-full animate-pulse"
-                                style={{ backgroundColor: interfaceStyles.color, opacity: 0.2 }}
-                              />
-                            </div>
-                          )}
+                                className="flex-shrink-0"
+                                style={bookmarkIndicatorStyles}
+                                title={getTranslation('bookmark')}
+                                aria-label={`Chapter ${index + 1} has bookmarks`}
+                              >
+                                <Bookmark 
+                                  className="w-4 h-4 fill-current" 
+                                  style={{ 
+                                    filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))'
+                                  }}
+                                />
+                              </div>
+                            )}
+                            
+                            {/* Loading indicator for bookmarks */}
+                            {isLoadingBookmarks && (
+                              <div className="flex-shrink-0">
+                                <div 
+                                  className="w-4 h-4 rounded-full animate-pulse"
+                                  style={{ backgroundColor: interfaceStyles.color, opacity: 0.2 }}
+                                />
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
-                        {isCurrentChapter && (
-                          <span className="text-xs font-medium" style={{ color: '#007BFF' }}>
-                            {getTranslation('currentlyReading')}
-                          </span>
-                        )}
+                        <div className="flex items-center justify-between mt-1">
+                          {isCurrentChapter && (
+                            <span className="text-xs font-medium" style={{ color: '#007BFF' }}>
+                              {getTranslation('currentlyReading')}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </button>
@@ -259,18 +300,31 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
           style={{ 
             borderColor: interfaceStyles.borderColor,
             backgroundColor: interfaceStyles.backgroundColor,
-            opacity: 0.8
           }}
         >
-          <div className="flex items-center justify-between text-sm" style={{ color: interfaceStyles.color }}>
-            <span>
-              {chapters.length} {getTranslation('chaptersTotal')} • {getTranslation('useArrowKeysToNavigate')}
-            </span>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between text-xs font-medium" style={{ color: interfaceStyles.color }}>
+              <span className="opacity-60">{getTranslation('totalProgress')}</span>
+              <span style={{ color: '#007BFF' }}>{totalProgress}%</span>
+            </div>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-blue-500 transition-all duration-500 ease-out"
+                style={{ width: `${totalProgress}%` }}
+              />
+            </div>
+            <div className="flex items-center justify-between text-[10px] opacity-60" style={{ color: interfaceStyles.color }}>
+              <span>
+                {chapters.length} {getTranslation('chaptersTotal')}
+              </span>
+              <span>{getTranslation('useArrowKeysToNavigate')}</span>
+            </div>
           </div>
         </div>
       </div>
       {/* Overlay - click to close */}
       <div className="flex-1" onClick={onClose} />
-    </div>
+    </div>,
+    document.body
   );
 };

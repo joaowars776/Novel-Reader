@@ -79,7 +79,13 @@
         defaultBrowserLanguage = 'en'; // Fallback to English if browser language not supported
       }
 
-      const savedLanguage = localStorage.getItem('selectedLanguage') as Language;
+      let savedLanguage: Language | null = null;
+      try {
+        savedLanguage = localStorage.getItem('selectedLanguage') as Language;
+      } catch {
+        console.warn('Could not access localStorage for language settings');
+      }
+
       if (savedLanguage && AVAILABLE_LANGUAGES.some(lang => lang.code === savedLanguage)) {
         currentLanguage = savedLanguage;
       } else {
@@ -89,7 +95,11 @@
 
     export const setLanguage = (language: Language) => {
       currentLanguage = language;
-      localStorage.setItem('selectedLanguage', language);
+      try {
+        localStorage.setItem('selectedLanguage', language);
+      } catch {
+        console.warn('Could not save language to localStorage');
+      }
       
       // Trigger a custom event to notify components of language change
       window.dispatchEvent(new CustomEvent('languageChanged', { detail: language }));

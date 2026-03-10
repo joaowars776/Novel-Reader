@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Bookmark, Plus, X, Trash2, Edit2 } from 'lucide-react';
-import { getBookmarks, saveBookmark, deleteBookmark, saveBookmarkState, getBookmarkState } from '../../utils/storage';
+import { getBookmarks, saveBookmark, deleteBookmark, saveBookmarkState } from '../../utils/storage';
 import { getTranslation } from '../../utils/translations';
 import type { Bookmark as BookmarkType, Chapter, ReadingPreferences } from '../../types';
 
@@ -26,6 +27,7 @@ export const BookmarksPanel: React.FC<BookmarksPanelProps> = ({
   const [bookmarkLabel, setBookmarkLabel] = useState('');
   const [editingBookmark, setEditingBookmark] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState('');
+  const [bookmarkToDelete, setBookmarkToDelete] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Memoize interface styles to prevent recalculation
@@ -124,21 +126,31 @@ export const BookmarksPanel: React.FC<BookmarksPanelProps> = ({
     }
   };
 
-  const handleDeleteBookmark = async (bookmarkId: string) => {
-    if (window.confirm(getTranslation('areYouSureDeleteBookmark'))) {
+  const handleDeleteBookmark = (bookmarkId: string) => {
+    setBookmarkToDelete(bookmarkId);
+  };
+
+  const confirmDeleteBookmark = async () => {
+    if (bookmarkToDelete) {
       try {
-        const bookmarkToDelete = bookmarks.find(b => b.id === bookmarkId);
-        await deleteBookmark(bookmarkId);
-        setBookmarks(prev => prev.filter(b => b.id !== bookmarkId));
+        const bookmark = bookmarks.find(b => b.id === bookmarkToDelete);
+        await deleteBookmark(bookmarkToDelete);
+        setBookmarks(prev => prev.filter(b => b.id !== bookmarkToDelete));
         
         // Dispatch custom event to notify TOC of bookmark change
-        if (bookmarkToDelete) {
-          window.dispatchEvent(new CustomEvent('bookmarkDeleted', { detail: { bookId, chapterIndex: bookmarkToDelete.chapterIndex } }));
+        if (bookmark) {
+          window.dispatchEvent(new CustomEvent('bookmarkDeleted', { detail: { bookId, chapterIndex: bookmark.chapterIndex } }));
         }
       } catch (error) {
         console.error('Error deleting bookmark:', error);
+      } finally {
+        setBookmarkToDelete(null);
       }
     }
+  };
+
+  const cancelDeleteBookmark = () => {
+    setBookmarkToDelete(null);
   };
 
   const handleEditBookmark = async (bookmarkId: string) => {
@@ -160,8 +172,8 @@ export const BookmarksPanel: React.FC<BookmarksPanelProps> = ({
   };
 
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end animate-fade-in">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/50 z-[100] flex justify-end animate-fade-in backdrop-blur-sm">
       <div 
         ref={panelRef}
         className="w-full max-w-md h-full shadow-xl overflow-y-auto animate-slide-in-right"
@@ -381,6 +393,45 @@ export const BookmarksPanel: React.FC<BookmarksPanelProps> = ({
           </div>
         )}
       </div>
-    </div>
+
+      {/* Delete Confirmation Modal */}
+      {bookmarkToDelete && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm">
+          <div 
+            className="w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-scale-in"
+            style={{
+              backgroundColor: interfaceStyles.backgroundColor,
+              color: interfaceStyles.color,
+              border: `1px solid ${interfaceStyles.borderColor}`
+            }}
+          >
+            <div className="p-6">
+              <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+                <Trash2 className="w-5 h-5 text-red-500" />
+                {getTranslation('delete')}
+              </h3>
+              <p className="mb-6 opacity-80">
+                {getTranslation('areYouSureDeleteBookmark')}
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={cancelDeleteBookmark}
+                  className="px-4 py-2 rounded-lg font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/10"
+                >
+                  {getTranslation('cancel')}
+                </button>
+                <button
+                  onClick={confirmDeleteBookmark}
+                  className="px-4 py-2 rounded-lg font-medium bg-red-500 text-white hover:bg-red-600 transition-colors shadow-sm"
+                >
+                  {getTranslation('delete')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>,
+    document.body
   );
 };

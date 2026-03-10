@@ -1,6 +1,6 @@
 import { openDB, type IDBPDatabase } from 'idb';
-import { INTERFACE_THEMES, COLOR_THEMES, getInterfaceTheme } from './themes';
-import type { Book, ReadingPreferences, Bookmark, ReadingStats, ReadingSession } from '../types';
+import { INTERFACE_THEMES, getInterfaceTheme } from './themes';
+import type { Book, ReadingPreferences, Bookmark, ReadingStats } from '../types';
 
 const DB_NAME = 'EBookReaderDB';
 const DB_VERSION = 4; // Incremented for reading sessions
@@ -60,7 +60,7 @@ export const initDB = async () => {
   
   try {
     db = await openDB(DB_NAME, DB_VERSION, {
-      upgrade(db, oldVersion) {
+      upgrade(db) {
         // Books store
         if (!db.objectStoreNames.contains('books')) {
           const booksStore = db.createObjectStore('books', { keyPath: 'id' });
@@ -136,19 +136,25 @@ export const initDB = async () => {
 // Error logging function
 export const logError = async (type: string, error: any, context?: any) => {
   // Throttle error logging to prevent spam
-  const errorKey = `${type}-${error.message || error}`;
-  const lastLogged = sessionStorage.getItem(`lastError-${errorKey}`);
-  const now = Date.now();
+  const errorKey = `${type}-${error?.message || error}`;
   
-  if (lastLogged && (now - parseInt(lastLogged)) < 5000) {
-    return; // Don't log the same error within 5 seconds
+  try {
+    const lastLogged = sessionStorage.getItem(`lastError-${errorKey}`);
+    const now = Date.now();
+    
+    if (lastLogged && (now - parseInt(lastLogged)) < 5000) {
+      return; // Don't log the same error within 5 seconds
+    }
+    
+    sessionStorage.setItem(`lastError-${errorKey}`, now.toString());
+  } catch {
+    // Ignore sessionStorage errors (e.g., in iframes with blocked cookies)
+    console.warn('Could not access sessionStorage for error throttling');
   }
-  
-  sessionStorage.setItem(`lastError-${errorKey}`, now.toString());
   
   const errorLog = {
     type,
-    error: error.message || error,
+    error: error?.message || error,
     context,
     timestamp: new Date().toISOString(),
     userAgent: navigator.userAgent,
@@ -339,6 +345,26 @@ export const saveNavigationState = async (bookId: string, chapterIndex: number, 
     });
   } catch (error) {
     logError('SAVE_NAVIGATION_FAILED', error, { bookId, chapterIndex });
+  }
+};
+
+export const saveHeaderButtonPosition = async (x: number) => {
+  try {
+    const database = await initDB();
+    await database.put('preferences', { id: 'header-button-x', x });
+  } catch (error) {
+    logError('SAVE_HEADER_BUTTON_X_FAILED', error);
+  }
+};
+
+export const getHeaderButtonPosition = async (): Promise<number> => {
+  try {
+    const database = await initDB();
+    const data = await database.get('preferences', 'header-button-x');
+    return data?.x ?? 50;
+  } catch (error) {
+    logError('GET_HEADER_BUTTON_X_FAILED', error);
+    return 50;
   }
 };
 

@@ -2,13 +2,12 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { saveCoverImage, logError } from './storage';
 import type { Book, Chapter } from '../types';
 
-// Configure PDF.js worker for Vite
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs?url';
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+// Configure PDF.js worker using CDN to avoid Vite dev server proxy issues
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
 export class PdfParser {
   private pdf: any;
-  private isDestroyed: boolean = false;
+  public isDestroyed: boolean = false;
   private file: File;
   private searchCache: Map<string, any> = new Map();
 
@@ -120,9 +119,12 @@ export class PdfParser {
               id: `chapter-${order}`,
               title: item.title || `Chapter ${order + 1}`,
               content: '',
-              href: `page-${pageNumber}`,
-              order: order++
+              startIndex: 0,
+              endIndex: 0,
+              pageNumber: pageNumber,
+              href: `page-${pageNumber}` // Keep href for internal logic
             });
+            order++;
 
             if (item.items && item.items.length > 0) {
               for (const subItem of item.items) {
@@ -151,8 +153,10 @@ export class PdfParser {
             id: `chapter-${chapters.length}`,
             title: endPage === startPage ? `Page ${startPage}` : `Pages ${startPage}-${endPage}`,
             content: '',
-            href: `page-${startPage}`,
-            order: chapters.length
+            startIndex: 0,
+            endIndex: 0,
+            pageNumber: startPage,
+            href: `page-${startPage}` // Keep href for internal logic
           });
         }
       }
@@ -182,6 +186,9 @@ export class PdfParser {
 
       // Basic formatting - add line breaks for better readability
       text = text.replace(/\s+/g, ' ').trim();
+      
+      // Remove specific boilerplate text requested by user
+      text = text.replace(/If audio player doesn't work, press Stop then Play button again/gi, '');
       
       // Try to detect paragraphs and add proper formatting
       const sentences = text.split(/[.!?]+/);
@@ -375,7 +382,11 @@ export class PdfParser {
       this.searchCache.clear();
       
       if (this.pdf) {
-        this.pdf.destroy();
+        try {
+          this.pdf.destroy();
+        } catch (e) {
+          console.warn('Error destroying PDF:', e);
+        }
         this.pdf = null;
       }
     } catch (error) {

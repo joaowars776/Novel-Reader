@@ -69,5 +69,22 @@ export const koReaderInterface = {
   'showingFirstResults': '처음',
   'resultsForOptimal': '개 결과를 최적 성능을 위해 표시.',
   'tryMoreSpecific': '결과를 좁히기 위해 더 구체적인 검색어를 사용해 보세요.',
-  'foundResultsFor': '에 대한'
+  'foundResultsFor': '에 대한',
+  
+  // Shortcuts Modal translations
+  'shortcuts': '단축키',
+  'action': '동작',
+  'shortcut': '단축키',
+  'nextChapter': '다음 장',
+  'previousChapter': '이전 장',
+  'toggleMenu': '목차',
+  'toggleSettings': '설정',
+  'toggleFullscreen': '전체 화면',
+  'increaseFontSize': '글꼴 크기 키우기',
+  'decreaseFontSize': '글꼴 크기 줄이기',
+  'close': '닫기',
+  'totalProgress': '전체 진행률',
+  'read': '읽음',
+  'pdfText': '텍스트',
+  'pdfOriginal': '원본',
 };

@@ -69,5 +69,22 @@ export const ruReaderInterface = {
   'showingFirstResults': 'Показаны первые',
   'resultsForOptimal': 'результатов для оптимальной производительности.',
   'tryMoreSpecific': 'Попробуйте использовать более конкретные поисковые запросы для сужения результатов.',
-  'foundResultsFor': 'для'
+  'foundResultsFor': 'для',
+  
+  // Shortcuts Modal translations
+  'shortcuts': 'Горячие клавиши',
+  'action': 'Действие',
+  'shortcut': 'Клавиша',
+  'nextChapter': 'Следующая глава',
+  'previousChapter': 'Предыдущая глава',
+  'toggleMenu': 'Оглавление',
+  'toggleSettings': 'Настройки',
+  'toggleFullscreen': 'Полноэкранный режим',
+  'increaseFontSize': 'Увеличить шрифт',
+  'decreaseFontSize': 'Уменьшить шрифт',
+  'close': 'Закрыть',
+  'totalProgress': 'Общий прогресс',
+  'read': 'Прочитано',
+  'pdfText': 'Текст',
+  'pdfOriginal': 'Оригинал',
 };

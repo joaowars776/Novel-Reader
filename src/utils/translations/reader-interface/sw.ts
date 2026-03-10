@@ -67,5 +67,22 @@ export const swReaderInterface = {
   'showingFirstResults': 'Inaonyesha ya kwanza',
   'resultsForOptimal': 'matokeo kwa utendakazi bora.',
   'tryMoreSpecific': 'Jaribu kutumia maneno ya utafutaji mahususi zaidi kupunguza matokeo.',
-  'foundResultsFor': 'matokeo kwa'
+  'foundResultsFor': 'matokeo kwa',
+  
+  // Shortcuts Modal translations
+  'shortcuts': 'Njia za mkato',
+  'action': 'Hatua',
+  'shortcut': 'Njia ya mkato',
+  'nextChapter': 'Sura Inayofuata',
+  'previousChapter': 'Sura Iliyopita',
+  'toggleMenu': 'Jedwali la Yaliyomo',
+  'toggleSettings': 'Mipangilio',
+  'toggleFullscreen': 'Skrini Kamili',
+  'increaseFontSize': 'Ongeza Ukubwa wa Fonti',
+  'decreaseFontSize': 'Punguza Ukubwa wa Fonti',
+  'close': 'Funga',
+  'totalProgress': 'Maendeleo ya Jumla',
+  'read': 'Imesomwa',
+  'pdfText': 'Maandishi',
+  'pdfOriginal': 'Asili',
 };

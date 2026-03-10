@@ -45,7 +45,7 @@ import React, { useState, useEffect } from 'react';
       useEffect(() => {
         const handleRouting = () => {
           const path = window.location.pathname;
-          const bookTitleMatch = path.match(/^\/([^\/]+)\/chapter\/(\d+)$/);
+          const bookTitleMatch = path.match(/^\/([^/]+)\/chapter\/(\d+)$/);
           
           if (bookTitleMatch && currentBook) {
             const chapterNumber = parseInt(bookTitleMatch[2], 10);

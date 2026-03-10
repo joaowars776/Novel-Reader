@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, BookOpen, Clock, MoreVertical, Trash2, Globe, BarChart3, Library as LibraryIcon, Grid3X3, List, Settings, FileText, File } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { Plus, Search, BookOpen, MoreVertical, Trash2, Globe, BarChart3, Library as LibraryIcon, Grid3X3, List, Settings, FileText, File } from 'lucide-react';
 import { getBooks, deleteBook, getCoverImage, getPreferences, savePreferences } from '../utils/storage';
 import { BookUploader } from './BookUploader';
 import { LanguageSelector } from './LanguageSelector';
@@ -8,7 +9,7 @@ import { HomePageSettings } from './HomePageSettings';
 import { getTranslation, initializeLanguage } from '../utils/translations';
 import { applyInterfaceTheme, getInterfaceTheme } from '../utils/themes';
 import { useDragDropController } from '../hooks/useDragDropController';
-import { getSupportedFileTypes, getFileType, getFileTypeDisplayName } from '../utils/file-parser';
+import { getSupportedFileTypes, getFileTypeDisplayName } from '../utils/file-parser';
 import type { Book, ReadingPreferences } from '../types';
 
 interface LibraryProps {
@@ -30,6 +31,7 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
   const [showHomePageSettings, setShowHomePageSettings] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('cover');
   const [preferences, setPreferences] = useState<ReadingPreferences | null>(null);
+  const [bookToDelete, setBookToDelete] = useState<string | null>(null);
 
   const supportedTypes = getSupportedFileTypes();
 
@@ -117,21 +119,31 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
     }
   };
 
-  const handleDeleteBook = async (bookId: string) => {
-    if (window.confirm(getTranslation('confirmDeleteBook'))) {
+  const handleDeleteBook = (bookId: string) => {
+    setBookToDelete(bookId);
+  };
+
+  const confirmDeleteBook = async () => {
+    if (bookToDelete) {
       try {
-        await deleteBook(bookId);
-        setBooks(prev => prev.filter(book => book.id !== bookId));
+        await deleteBook(bookToDelete);
+        setBooks(prev => prev.filter(book => book.id !== bookToDelete));
         setCoverUrls(prev => {
           const newUrls = { ...prev };
-          delete newUrls[bookId];
+          delete newUrls[bookToDelete];
           return newUrls;
         });
         setSelectedBook(null);
       } catch (error) {
         console.error('Error deleting book:', error);
+      } finally {
+        setBookToDelete(null);
       }
     }
+  };
+
+  const cancelDeleteBook = () => {
+    setBookToDelete(null);
   };
 
   const handlePreferencesChange = async (newPreferences: ReadingPreferences) => {
@@ -664,12 +676,10 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
 
       {/* Book Uploader Modal */}
       {isUploaderOpen && (
-        <div className="animate-fade-in">
-          <BookUploader
-            onBookAdded={handleBookAdded}
-            onClose={() => setIsUploaderOpen(false)}
-          />
-        </div>
+        <BookUploader
+          onBookAdded={handleBookAdded}
+          onClose={() => setIsUploaderOpen(false)}
+        />
       )}
 
       {/* Home Page Settings Panel */}
@@ -679,6 +689,45 @@ export const Library: React.FC<LibraryProps> = ({ onOpenBook }) => {
           onPreferencesChange={handlePreferencesChange}
           onClose={() => setShowHomePageSettings(false)}
         />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {bookToDelete && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm">
+          <div 
+            className="w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-scale-in"
+            style={{
+              backgroundColor: interfaceStyles.backgroundColor,
+              color: interfaceStyles.color,
+              border: `1px solid ${interfaceStyles.borderColor}`
+            }}
+          >
+            <div className="p-6">
+              <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+                <Trash2 className="w-5 h-5 text-red-500" />
+                {getTranslation('delete')}
+              </h3>
+              <p className="mb-6 opacity-80">
+                {getTranslation('confirmDeleteBook')}
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={cancelDeleteBook}
+                  className="px-4 py-2 rounded-lg font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/10"
+                >
+                  {getTranslation('cancel')}
+                </button>
+                <button
+                  onClick={confirmDeleteBook}
+                  className="px-4 py-2 rounded-lg font-medium bg-red-500 text-white hover:bg-red-600 transition-colors shadow-sm"
+                >
+                  {getTranslation('delete')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );

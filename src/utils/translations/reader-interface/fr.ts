@@ -69,5 +69,22 @@ export const frReaderInterface = {
   'showingFirstResults': 'Affichage des premiers',
   'resultsForOptimal': 'résultats pour des performances optimales.',
   'tryMoreSpecific': 'Essayez d\'utiliser des termes de recherche plus spécifiques pour affiner les résultats.',
-  'foundResultsFor': 'pour'
+  'foundResultsFor': 'pour',
+  
+  // Shortcuts Modal translations
+  'shortcuts': 'Raccourcis',
+  'action': 'Action',
+  'shortcut': 'Raccourci',
+  'nextChapter': 'Chapitre Suivant',
+  'previousChapter': 'Chapitre Précédent',
+  'toggleMenu': 'Table des Matières',
+  'toggleSettings': 'Paramètres',
+  'toggleFullscreen': 'Plein Écran',
+  'increaseFontSize': 'Augmenter la Taille de la Police',
+  'decreaseFontSize': 'Diminuer la Taille de la Police',
+  'close': 'Fermer',
+  'totalProgress': 'Progrès Total',
+  'read': 'Lu',
+  'pdfText': 'Texte',
+  'pdfOriginal': 'Original',
 };

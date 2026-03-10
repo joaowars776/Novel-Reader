@@ -171,39 +171,16 @@ class DragDropController {
    * Disable default browser drag and drop behavior
    */
   private disableDefaultDragBehavior(): void {
-    // Disable drag and drop on the entire document
-    document.body.style.userSelect = 'none';
-    document.body.style.webkitUserSelect = 'none';
-    
-    // Add CSS to prevent text selection during drag
+    // Add CSS to prevent text selection during drag only when needed
     const style = document.createElement('style');
+    style.setAttribute('data-drag-controller', 'true');
     style.textContent = `
-      * {
-        -webkit-user-drag: none;
-        -khtml-user-drag: none;
-        -moz-user-drag: none;
-        -o-user-drag: none;
-        user-drag: none;
+      .dragging-active * {
+        pointer-events: none !important;
       }
       
-      [data-drop-zone] {
-        -webkit-user-drag: auto !important;
-        -khtml-user-drag: auto !important;
-        -moz-user-drag: auto !important;
-        -o-user-drag: auto !important;
-        user-drag: auto !important;
-      }
-      
-      .no-drag-overlay::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: transparent;
-        z-index: 9999;
-        pointer-events: none;
+      .dragging-active [data-drop-zone] {
+        pointer-events: auto !important;
       }
     `;
     document.head.appendChild(style);
@@ -213,9 +190,6 @@ class DragDropController {
    * Restore default drag behavior
    */
   private restoreDefaultDragBehavior(): void {
-    document.body.style.userSelect = '';
-    document.body.style.webkitUserSelect = '';
-    
     // Remove custom styles
     const customStyles = document.head.querySelectorAll('style[data-drag-controller]');
     customStyles.forEach(style => style.remove());

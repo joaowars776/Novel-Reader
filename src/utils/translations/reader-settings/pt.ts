@@ -88,5 +88,9 @@ export const ptReaderSettings = {
   'showShortcutsIcon': 'Mostrar Ícone de Atalhos',
   'settingsIconAlwaysVisible': 'O ícone de configurações está sempre visível e não pode ser ocultado',
   'textToSpeech': 'Texto para Fala',
-  'experimental': 'Experimental'
+  'experimental': 'Experimental',
+  'pdfOriginalModeActive': 'Modo PDF Original Ativo',
+  'pdfOriginalModeWarning': 'Neste modo, ajustes de texto (fonte, tamanho, altura da linha) e temas de leitura não se aplicam ao conteúdo do PDF, pois ele é renderizado em seu layout original. Você ainda pode usar os temas de interface para mudar a aparência do cabeçalho e do painel de configurações.',
+  'pdfSettingsBlocked': 'Configurações Bloqueadas',
+  'pdfSettingsBlockedDescription': 'As configurações de texto e leitura estão desativadas no modo PDF Original para preservar o layout do documento.'
 };

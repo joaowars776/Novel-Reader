@@ -83,4 +83,8 @@ export const enReaderInterface = {
   'increaseFontSize': 'Increase Font Size',
   'decreaseFontSize': 'Decrease Font Size',
   'close': 'Close',
+  'totalProgress': 'Total Progress',
+  'read': 'Read',
+  'pdfText': 'Text',
+  'pdfOriginal': 'Original',
 };

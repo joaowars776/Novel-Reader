@@ -1,9 +1,9 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
-import { Upload, BookOpen, X, FileText, File, Folder } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { Upload, BookOpen, X, FileText, File, Folder, Info } from 'lucide-react';
 import { createBookFromSupportedFile, getSupportedFileTypes, getFileType } from '../utils/file-parser';
 import { saveBook } from '../utils/storage';
 import { getTranslation } from '../utils/translations';
-import { useDragDropController } from '../hooks/useDragDropController';
 import type { Book } from '../types';
 
 interface BookUploaderProps {
@@ -21,18 +21,6 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
   const modalContentRef = useRef<HTMLDivElement>(null);
 
   const supportedTypes = getSupportedFileTypes();
-
-  const { enableDragForElement } = useDragDropController({
-    enableDragOverlay: false,
-    allowedFileTypes: supportedTypes,
-    preventDefaultDragBehavior: true
-  });
-
-  useEffect(() => {
-    if (dropZoneRef.current) {
-      enableDragForElement(dropZoneRef.current);
-    }
-  }, [enableDragForElement]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -166,53 +154,69 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
     setIsDragOver(true);
   }, []);
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-      <div ref={modalContentRef} className="bg-white rounded-3xl max-w-2xl w-full p-6 relative animate-scale-in shadow-2xl border border-gray-100 themed-panel">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 overflow-y-auto">
+      {/* Backdrop */}
+      <div 
+        className="fixed inset-0 bg-black/60 backdrop-blur-md animate-fade-in" 
+        onClick={onClose}
+      />
+      
+      {/* Modal Content */}
+      <div 
+        ref={modalContentRef} 
+        className="bg-white rounded-[2rem] max-w-2xl w-full p-8 relative animate-scale-in shadow-2xl border border-white/20 themed-panel my-auto z-10"
+      >
         {onClose && (
           <button
             onClick={onClose}
-            className="absolute top-5 right-5 p-2 hover:bg-gray-100 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="absolute top-6 right-6 p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 z-20"
             aria-label={getTranslation('closeUploader')}
           >
             <X className="w-6 h-6" style={{ color: 'var(--interface-textSecondary)' }} />
           </button>
         )}
 
-        <div className="text-center mb-6 mt-10">
-          <BookOpen className="w-14 h-14 mx-auto mb-3" style={{ color: 'var(--interface-accent)' }} />
-          <h2 className="text-3xl font-extrabold mb-2" style={{ color: 'var(--interface-textPrimary)' }}>{getTranslation('addNewBook')}</h2>
-          <p className="text-lg" style={{ color: 'var(--interface-textSecondary)' }}>{getTranslation('uploadSupportedFile')}</p>
+        <div className="text-center mb-8">
+          <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-3xl flex items-center justify-center mx-auto mb-4 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+            <BookOpen className="w-10 h-10" style={{ color: 'var(--interface-accent)' }} />
+          </div>
+          <h2 className="text-3xl font-bold mb-2" style={{ color: 'var(--interface-textPrimary)' }}>{getTranslation('addNewBook')}</h2>
+          <p className="text-lg opacity-70" style={{ color: 'var(--interface-textSecondary)' }}>{getTranslation('uploadSupportedFile')}</p>
         </div>
 
         <div
           ref={dropZoneRef}
-          className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 ease-in-out ${
+          className={`relative border-2 border-dashed rounded-[1.5rem] p-12 text-center transition-all duration-500 ease-out group ${
             isDragOver
-              ? 'transform scale-[1.01] shadow-lg'
-              : 'hover:shadow-md'
-          } ${isUploading ? 'opacity-60 pointer-events-none' : ''}`}
-          style={{
-            borderColor: isDragOver ? 'var(--interface-accent)' : 'var(--interface-divider)',
-            backgroundColor: isDragOver ? 'var(--interface-panelSecondaryBackground)' : 'transparent',
-          }}
+              ? 'bg-blue-50/50 dark:bg-blue-900/10 border-blue-400 scale-[1.02] shadow-xl shadow-blue-500/10'
+              : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+          } ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDragEnter={handleDragEnter}
           data-drop-zone="true"
         >
-          <Upload className={`w-14 h-14 mx-auto mb-4 transition-all duration-300 ${isDragOver ? 'transform scale-110' : ''}`} style={{ color: isDragOver ? 'var(--interface-accent)' : 'var(--interface-textMuted)' }} />
+          <div className={`w-20 h-20 bg-gray-50 dark:bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-500 ${isDragOver ? 'scale-110 bg-blue-100 dark:bg-blue-900/30' : ''}`}>
+            <Upload 
+              className={`w-10 h-10 transition-all duration-500 ${isDragOver ? 'text-blue-500' : 'text-gray-400'}`} 
+            />
+          </div>
           
-          <div className="mb-4">
-            <p className="text-xl font-semibold mb-1" style={{ color: 'var(--interface-textPrimary)' }}>
+          <div className="mb-8">
+            <p className="text-2xl font-bold mb-2" style={{ color: 'var(--interface-textPrimary)' }}>
               {isDragOver ? getTranslation('dropFileHere') : getTranslation('dragAndDropFile')}
             </p>
-            <p className="text-base" style={{ color: 'var(--interface-textSecondary)' }}>{getTranslation('or')}</p>
+            <div className="flex items-center justify-center gap-4 text-gray-400">
+              <div className="h-px w-8 bg-current opacity-20"></div>
+              <span className="text-sm font-medium uppercase tracking-widest">{getTranslation('or')}</span>
+              <div className="h-px w-8 bg-current opacity-20"></div>
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-            <label className="inline-block">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <label className="relative">
               <input
                 type="file"
                 accept={supportedTypes.join(',')}
@@ -221,22 +225,21 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
                 disabled={isUploading}
                 ref={fileInputRef}
               />
-              <span className="px-6 py-3 rounded-lg transition-all duration-300 cursor-pointer inline-flex items-center justify-center font-semibold text-lg transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              <span className="px-8 py-4 rounded-2xl transition-all duration-300 cursor-pointer flex items-center justify-center font-bold text-lg shadow-lg hover:shadow-blue-500/25 active:scale-95"
                 style={{
                   backgroundColor: 'var(--interface-buttonPrimary)',
                   color: 'var(--interface-buttonPrimaryText)',
-                  boxShadow: '0 0 0 3px var(--interface-accent)',
                 }}
               >
-                <FileText className="w-5 h-5 mr-2" />
+                <FileText className="w-5 h-5 mr-3" />
                 {isUploading ? getTranslation('processing') : getTranslation('selectFile')}
               </span>
             </label>
 
-            <label className="inline-block">
+            <label className="relative">
               <input
                 type="file"
-                // @ts-ignore webkitdirectory is a non-standard property
+                // @ts-expect-error webkitdirectory is a non-standard property
                 webkitdirectory=""
                 directory=""
                 onChange={handleFolderSelect}
@@ -244,14 +247,13 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
                 disabled={isUploading}
                 ref={folderInputRef}
               />
-              <span className="px-6 py-3 rounded-lg transition-all duration-300 cursor-pointer inline-flex items-center justify-center font-semibold text-lg transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              <span className="px-8 py-4 rounded-2xl transition-all duration-300 cursor-pointer flex items-center justify-center font-bold text-lg shadow-lg hover:shadow-gray-500/10 active:scale-95 border border-gray-100 dark:border-gray-800"
                 style={{
                   backgroundColor: 'var(--interface-buttonSecondary)',
                   color: 'var(--interface-buttonSecondaryText)',
-                  boxShadow: '0 0 0 3px var(--interface-accent)',
                 }}
               >
-                <Folder className="w-5 h-5 mr-2" />
+                <Folder className="w-5 h-5 mr-3" />
                 {getTranslation('selectFolder')}
               </span>
             </label>
@@ -259,45 +261,37 @@ export const BookUploader: React.FC<BookUploaderProps> = ({ onBookAdded, onClose
         </div>
 
         {error && (
-          <div className="mt-5 p-3 rounded-lg animate-fade-in text-sm font-medium"
+          <div className="mt-6 p-4 rounded-2xl animate-fade-in flex items-start gap-3"
             style={{
-              backgroundColor: 'var(--interface-error)',
-              color: 'var(--interface-buttonPrimaryText)',
-              border: '1px solid var(--interface-error)',
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              color: '#ef4444',
+              border: '1px solid rgba(239, 68, 68, 0.2)',
             }}
           >
-            <p>{error}</p>
+            <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+            <p className="text-sm font-semibold">{error}</p>
           </div>
         )}
 
-        <div className="mt-6">
-          <h3 className="text-sm font-medium mb-3 text-center" style={{ color: 'var(--interface-textSecondary)' }}>{getTranslation('supportedFormats')}:</h3>
-          <div className="flex gap-3 justify-center">
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full shadow-sm border"
-              style={{
-                backgroundColor: 'var(--interface-panelSecondaryBackground)',
-                borderColor: 'var(--interface-divider)',
-              }}
-            >
-              <FileText className="w-4 h-4" style={{ color: 'var(--interface-accent)' }} />
-              <span className="text-sm font-medium" style={{ color: 'var(--interface-textPrimary)' }}>EPUB</span>
+        <div className="mt-10 pt-8 border-t border-gray-100 dark:border-gray-800">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex gap-3">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800">
+                <FileText className="w-4 h-4 text-blue-500" />
+                <span className="text-xs font-bold tracking-wider" style={{ color: 'var(--interface-textPrimary)' }}>EPUB</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800">
+                <File className="w-4 h-4 text-red-500" />
+                <span className="text-xs font-bold tracking-wider" style={{ color: 'var(--interface-textPrimary)' }}>PDF</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full shadow-sm border"
-              style={{
-                backgroundColor: 'var(--interface-panelSecondaryBackground)',
-                borderColor: 'var(--interface-divider)',
-              }}
-            >
-              <File className="w-4 h-4" style={{ color: 'var(--interface-error)' }} />
-              <span className="text-sm font-medium" style={{ color: 'var(--interface-textPrimary)' }}>PDF</span>
-            </div>
+            <p className="text-xs font-medium opacity-50 max-w-[200px] text-center md:text-right" style={{ color: 'var(--interface-textSecondary)' }}>
+              {getTranslation('supportedFormatsDescription')}
+            </p>
           </div>
         </div>
-
-        <div className="mt-6 text-xs text-center" style={{ color: 'var(--interface-textMuted)' }}>
-          {getTranslation('supportedFormatsDescription')}
-        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

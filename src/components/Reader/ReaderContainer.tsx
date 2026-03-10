@@ -8,9 +8,11 @@ import { BookmarksPanel } from './BookmarksPanel';
 import { CornerNavigation } from './CornerNavigation';
 import { useReadingProgress } from '../../hooks/useReadingProgress';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
-import { getPreferences, savePreferences, saveNavigationState, logError } from '../../utils/storage';
+import { getPreferences, savePreferences, saveNavigationState, logError, getHeaderButtonPosition, saveHeaderButtonPosition } from '../../utils/storage';
 import { applyInterfaceTheme, getInterfaceTheme } from '../../utils/themes';
 import { createParserForFile } from '../../utils/file-parser';
+import { EpubParser } from '../../utils/epub-parser';
+import { PdfParser } from '../../utils/pdf-parser';
 import { startReadingSession, endReadingSession, changeChapter, updateReadingActivity } from '../../utils/reading-tracker';
 import type { Book, Chapter, ReadingPreferences, SearchResult } from '../../types';
 
@@ -28,12 +30,32 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isBookmarksOpen, setIsBookmarksOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isFullscreenReading, setIsFullscreenReading] = useState(false);
+  const [isFullscreenReading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [parser, setParser] = useState<any>(null);
+  const [parser, setParser] = useState<EpubParser | PdfParser | null>(null);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [pdfMode, setPdfMode] = useState(false);
+  const [isHeaderMinimized, setIsHeaderMinimized] = useState(false);
+  const [buttonX, setButtonX] = useState(50);
 
   const { updateProgress } = useReadingProgress(book.id);
+
+  // Load persisted button position
+  useEffect(() => {
+    const loadButtonPosition = async () => {
+      const x = await getHeaderButtonPosition();
+      setButtonX(x);
+    };
+    loadButtonPosition();
+  }, []);
+
+  // Persist button position when it changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      saveHeaderButtonPosition(buttonX);
+    }, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [buttonX]);
 
   // Memoize URL-friendly title generation
   const urlFriendlyTitle = useMemo(() => {
@@ -45,7 +67,12 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
   }, [book.title]);
 
   // Memoize current chapter
-  const currentChapter = useMemo(() => chapters[currentChapterIndex], [chapters, currentChapterIndex]);
+  const currentChapter = useMemo(() => {
+    if (chapters.length === 0 || currentChapterIndex < 0 || currentChapterIndex >= chapters.length) {
+      return undefined;
+    }
+    return chapters[currentChapterIndex];
+  }, [chapters, currentChapterIndex]);
 
   // Debounced URL update to prevent excessive history entries
   const updateURL = useCallback(
@@ -89,7 +116,7 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
   // Initialize parser and load chapters
   useEffect(() => {
     let isMounted = true;
-    let currentParser: any = null;
+    let currentParser: EpubParser | PdfParser | null = null;
 
     const initializeReader = async () => {
       try {
@@ -108,19 +135,35 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
           return;
         }
         
-        const chaptersData = await fileParser.getAllChapters();
+        // Optimize: Only get TOC first for faster initial load
+        const toc = await fileParser.getTableOfContents();
         
         if (!isMounted) {
           fileParser.destroy();
           return;
         }
         
-        if (!chaptersData || chaptersData.length === 0) {
+        if (!toc || toc.length === 0) {
           throw new Error('No chapters found in file');
         }
         
-        setChapters(chaptersData);
+        setChapters(toc);
         setParser(fileParser);
+
+        // Load current chapter content immediately
+        const initialChapterIndex = book.currentChapter;
+        if (toc[initialChapterIndex]) {
+          const content = await fileParser.getChapterContent(toc[initialChapterIndex].href);
+          if (isMounted) {
+            setChapters(prev => {
+              const updated = [...prev];
+              if (updated[initialChapterIndex]) {
+                updated[initialChapterIndex] = { ...updated[initialChapterIndex], content };
+              }
+              return updated;
+            });
+          }
+        }
 
         // Load preferences in parallel
         const userPrefs = await getPreferences();
@@ -139,7 +182,7 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
         }
 
         // Start reading session
-        const currentChapter = chaptersData[currentChapterIndex];
+        const currentChapter = toc[currentChapterIndex];
         if (currentChapter) {
           startReadingSession(
             book.id,
@@ -187,6 +230,67 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
     };
   }, [book.file, book.id, book.title, book.author, currentChapterIndex, onBackToLibrary]);
 
+  // Load chapter content when index changes
+  useEffect(() => {
+    if (!parser || !chapters || chapters.length === 0 || !chapters[currentChapterIndex] || chapters[currentChapterIndex].content) return;
+
+    const loadChapter = async () => {
+      try {
+        if (parser.isDestroyed) return;
+        const chapterToLoad = chapters[currentChapterIndex];
+        if (!chapterToLoad) return;
+        
+        const content = await parser.getChapterContent(chapterToLoad.href);
+        if (parser.isDestroyed) return;
+        
+        setChapters(prev => {
+          if (!prev || prev.length === 0) return prev;
+          const updated = [...prev];
+          if (updated[currentChapterIndex]) {
+            updated[currentChapterIndex] = { ...updated[currentChapterIndex], content };
+          }
+          return updated;
+        });
+      } catch (err) {
+        console.error('Error loading chapter:', err);
+      }
+    };
+
+    loadChapter();
+  }, [currentChapterIndex, parser, chapters, book.currentChapter, book.fileType]);
+
+  // Preload next chapter
+  useEffect(() => {
+    const nextIndex = currentChapterIndex + 1;
+    if (!parser || !chapters || chapters.length === 0 || !chapters[nextIndex] || chapters[nextIndex].content) return;
+
+    const preloadNext = async () => {
+      try {
+        if (parser.isDestroyed) return;
+        const chapterToPreload = chapters[nextIndex];
+        if (!chapterToPreload) return;
+        
+        const content = await parser.getChapterContent(chapterToPreload.href);
+        if (parser.isDestroyed) return;
+        
+        setChapters(prev => {
+          if (!prev || prev.length === 0) return prev;
+          const updated = [...prev];
+          if (updated[nextIndex]) {
+            updated[nextIndex] = { ...updated[nextIndex], content };
+          }
+          return updated;
+        });
+      } catch (_err) {
+        // Silent fail for preloading
+      }
+    };
+
+    // Delay preloading to prioritize current chapter
+    const timeoutId = setTimeout(preloadNext, 2000);
+    return () => clearTimeout(timeoutId);
+  }, [currentChapterIndex, parser, chapters]);
+
   // Optimized progress update with debouncing
   useEffect(() => {
     if (currentChapterIndex === book.currentChapter) return;
@@ -199,7 +303,7 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
     }, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [currentChapterIndex, chapters.length, book.currentChapter, updateProgress]);
+  }, [currentChapterIndex, chapters, book.currentChapter, updateProgress]);
 
   // Throttled activity tracking
   useEffect(() => {
@@ -288,7 +392,7 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
   const handleSearch = useCallback(
     (() => {
       let timeoutId: NodeJS.Timeout;
-      let searchCache = new Map<string, SearchResult[]>();
+      const searchCache = new Map<string, SearchResult[]>();
       
       return async (query: string, searchScope: 'chapter' | 'book' = 'chapter') => {
         if (!parser || !query.trim()) {
@@ -407,8 +511,8 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
-    onNextChapter: handleNextChapter,
-    onPreviousChapter: handlePreviousChapter,
+    onNextChapter: pdfMode ? () => {} : handleNextChapter,
+    onPreviousChapter: pdfMode ? () => {} : handlePreviousChapter,
     onToggleMenu: () => setIsMenuOpen(prev => !prev),
     onToggleSettings: () => setIsSettingsOpen(prev => !prev),
     onToggleFullscreen: toggleFullscreen,
@@ -445,7 +549,10 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div 
+      className="min-h-screen transition-colors duration-300"
+      style={{ backgroundColor: preferences.colors?.backgroundColor || '#ffffff' }}
+    >
       <ReaderHeader
         book={book}
         currentChapter={currentChapter}
@@ -459,9 +566,18 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
         onToggleFullscreen={toggleFullscreen}
         isFullscreen={isFullscreen || isFullscreenReading}
         preferences={preferences}
+        pdfMode={pdfMode}
+        onTogglePdfMode={() => setPdfMode(prev => !prev)}
+        isMinimized={isHeaderMinimized}
+        onToggleMinimize={() => setIsHeaderMinimized(prev => !prev)}
+        buttonX={buttonX}
+        onButtonXChange={setButtonX}
       />
 
-      <div className="reader-content">
+      <div 
+        className="reader-content transition-all duration-500 ease-in-out overflow-hidden"
+        style={{ paddingTop: isHeaderMinimized ? 0 : 64 }}
+      >
         <ReaderContent
           chapter={currentChapter}
           preferences={preferences}
@@ -470,6 +586,9 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
           canGoNext={navigationState.canGoNext}
           canGoPrevious={navigationState.canGoPrevious}
           onContentClick={handleContentClick}
+          pdfMode={pdfMode}
+          file={book.file}
+          isHeaderMinimized={isHeaderMinimized}
         />
       </div>
 
@@ -508,6 +627,7 @@ export const ReaderContainer: React.FC<ReaderContainerProps> = ({ book, onBackTo
           preferences={preferences}
           onPreferencesChange={handlePreferencesChange}
           onClose={() => setIsSettingsOpen(false)}
+          pdfMode={pdfMode}
         />
       )}
 

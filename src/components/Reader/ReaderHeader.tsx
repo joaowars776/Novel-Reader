@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Menu, Settings, Search, Bookmark, Share2, Eye, EyeOff, Maximize, Heart, Volume2, Keyboard } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, Menu, Settings, Search, Bookmark, Share2, Maximize, Heart, Volume2, Keyboard, Eye, ChevronUp, ChevronDown } from 'lucide-react';
 import { getInterfaceTheme } from '../../utils/themes';
 import { saveBookmark } from '../../utils/storage';
 import { getTranslation } from '../../utils/translations';
@@ -19,6 +19,12 @@ interface ReaderHeaderProps {
   onToggleFullscreen: () => void;
   isFullscreen: boolean;
   preferences?: ReadingPreferences;
+  pdfMode?: boolean;
+  onTogglePdfMode?: () => void;
+  isMinimized?: boolean;
+  onToggleMinimize?: () => void;
+  buttonX?: number;
+  onButtonXChange?: (x: number) => void;
 }
 
 export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
@@ -33,12 +39,62 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
   onToggleBookmarks,
   onToggleFullscreen,
   isFullscreen,
-  preferences
+  preferences,
+  pdfMode = false,
+  onTogglePdfMode,
+  isMinimized = false,
+  onToggleMinimize,
+  buttonX = 50,
+  onButtonXChange
 }) => {
   const [isAddingFavorite, setIsAddingFavorite] = useState(false);
   const [favoriteLabel, setFavoriteLabel] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [showShortcutsModal, setShowShortcutsModal] = useState(false); // New state for shortcuts modal
+  const [showShortcutsModal, setShowShortcutsModal] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const hasMovedRef = React.useRef(false);
+
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    setIsDragging(true);
+    hasMovedRef.current = false;
+    e.stopPropagation();
+  };
+
+  const handleDrag = React.useCallback((e: MouseEvent | TouchEvent) => {
+    if (!isDragging || !onButtonXChange) return;
+
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const percentage = (clientX / window.innerWidth) * 100;
+    const clampedPercentage = Math.max(5, Math.min(95, percentage));
+    
+    if (Math.abs(clampedPercentage - buttonX) > 0.5) {
+      hasMovedRef.current = true;
+    }
+    
+    onButtonXChange(clampedPercentage);
+  }, [isDragging, onButtonXChange, buttonX]);
+
+  const handleDragEnd = React.useCallback(() => {
+    // Small delay to ensure click handler can check hasMovedRef
+    setTimeout(() => {
+      setIsDragging(false);
+    }, 10); // Reduced delay
+  }, []);
+
+  React.useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleDrag);
+      window.addEventListener('mouseup', handleDragEnd);
+      window.addEventListener('touchmove', handleDrag);
+      window.addEventListener('touchend', handleDragEnd);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleDrag);
+      window.removeEventListener('mouseup', handleDragEnd);
+      window.removeEventListener('touchmove', handleDrag);
+      window.removeEventListener('touchend', handleDragEnd);
+    };
+  }, [isDragging, handleDrag, handleDragEnd]);
 
   const progressPercentage = (chapterProgress / totalChapters) * 100;
 
@@ -120,7 +176,10 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
       setIsSpeaking(false);
     } else {
       // Start speaking
-      const text = currentChapter.content.replace(/<[^>]*>/g, ''); // Strip HTML
+      const content = currentChapter.content || '';
+      const text = content.replace(/<[^>]*>/g, ''); // Strip HTML
+      if (!text.trim()) return;
+      
       const utterance = new SpeechSynthesisUtterance(text);
       
       utterance.onstart = () => setIsSpeaking(true);
@@ -158,14 +217,16 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
   return (
     <> {/* Use a React Fragment to return multiple top-level elements */}
       <header 
-        className="shadow-sm border-b translate-y-0" // Removed sticky, top-0, z-40
+        className={`fixed top-0 left-0 right-0 z-50 shadow-sm border-b transition-all duration-500 ease-in-out ${
+          isMinimized ? '-translate-y-[calc(100%-4px)]' : 'translate-y-0'
+        }`}
         style={{
           backgroundColor: interfaceStyles.backgroundColor,
           borderColor: interfaceStyles.borderColor,
           fontFamily: preferences?.applyFontGlobally ? 
             (preferences.fontFamily === 'Inter' ? 'Inter, sans-serif' : 
              preferences.fontFamily === 'JetBrains Mono' ? 'JetBrains Mono, monospace' :
-             'Georgia, serif') : undefined // Removed Crimson Text and Source Sans Pro
+             'Georgia, serif') : undefined
         }}
       >
         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
@@ -190,7 +251,7 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
                 <Menu className="w-5 h-5" />
               </button>
 
-              {/* Text-to-Speech Button - Moved to right of Table Of Contents */}
+              {/* Text-to-Speech Button */}
               {preferences?.enableTextToSpeech && (
                 <button
                   onClick={handleTextToSpeech}
@@ -218,14 +279,39 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
             </div>
 
             {/* Center section - Book info */}
-            <div className="flex-1 min-w-0 mx-4">
-              <div className="text-center">
-                <h1 className="text-lg font-semibold truncate" style={{ color: interfaceStyles.color }}>
-                  {currentChapter?.title || book.title}
-                </h1>
-                <p className="text-sm truncate" style={{ color: interfaceStyles.color, opacity: 0.7 }}>
-                  {book.author} • {getTranslation('chapter')} {chapterProgress} {getTranslation('of')} {totalChapters}
-                </p>
+            <div className="flex-1 min-w-0 mx-4 flex flex-col items-center">
+              <div className="flex items-center gap-3 max-w-full">
+                <div className="text-center min-w-0">
+                  <h1 className="text-sm sm:text-base font-semibold truncate" style={{ color: interfaceStyles.color }}>
+                    {currentChapter?.title || book.title}
+                  </h1>
+                  <p className="text-[10px] sm:text-xs truncate" style={{ color: interfaceStyles.color, opacity: 0.7 }}>
+                    {book.author} • {getTranslation('chapter')} {chapterProgress} {getTranslation('of')} {totalChapters}
+                  </p>
+                </div>
+
+                {/* PDF Mode Toggle */}
+                {book.fileType === 'pdf' && onTogglePdfMode && (
+                  <button
+                    onClick={onTogglePdfMode}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold transition-all duration-300 shrink-0 border-2 ${
+                      pdfMode 
+                        ? 'bg-red-600 border-red-700 text-white shadow-lg scale-105' 
+                        : 'bg-gray-100 bg-opacity-20 border-transparent hover:border-red-500 hover:bg-opacity-30'
+                    }`}
+                    style={{ 
+                      color: pdfMode ? '#ffffff' : interfaceStyles.color,
+                      backgroundColor: pdfMode ? '#dc2626' : undefined
+                    }}
+                    title={pdfMode ? 'Switch to Text Mode' : 'Switch to Original PDF Mode'}
+                  >
+                    <div className="flex items-center gap-1">
+                      <span className="bg-white text-red-600 px-1 rounded-[2px] text-[8px] font-black leading-none py-0.5">PDF</span>
+                      <Eye className="w-3 h-3" />
+                      <span className="hidden sm:inline uppercase tracking-wider">{pdfMode ? getTranslation('pdfOriginal') : getTranslation('pdfText')}</span>
+                    </div>
+                  </button>
+                )}
               </div>
 
               {/* Progress bar */}
@@ -288,14 +374,14 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
                 </button>
               )}
 
-              {/* Settings Icon - Always visible */}
+              {/* Settings Icon */}
               <button
                 onClick={onToggleSettings}
-                className="p-2 hover:bg-gray-100 hover:bg-opacity-20 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 hover:bg-opacity-20 rounded-lg transition-all duration-300 relative group"
                 style={{ color: interfaceStyles.color }}
                 aria-label={getTranslation('settings')}
               >
-                <Settings className="w-5 h-5" />
+                <Settings className="w-5 h-5 relative z-10 group-hover:rotate-45 transition-transform duration-500" />
               </button>
 
               {/* Fullscreen Icon */}
@@ -312,13 +398,51 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Minimize/Maximize Toggle Button */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // If we didn't move much, it's a click
+            if (!hasMovedRef.current) {
+              onToggleMinimize?.();
+            }
+          }}
+          onMouseDown={handleDragStart}
+          onTouchStart={handleDragStart}
+          className={`absolute bottom-0 translate-y-full px-4 py-1 rounded-b-xl shadow-md border-x border-b transition-all duration-300 hover:pb-2 group cursor-grab active:cursor-grabbing ${
+            isDragging ? 'scale-110 shadow-lg z-[60]' : ''
+          }`}
+          style={{ 
+            backgroundColor: interfaceStyles.backgroundColor,
+            borderColor: interfaceStyles.borderColor,
+            color: interfaceStyles.color,
+            left: `${buttonX}%`,
+            transform: `translateX(-50%) translateY(100%)`
+          }}
+          aria-label={isMinimized ? "Show header" : "Hide header"}
+        >
+          {isMinimized ? (
+            <ChevronDown className="w-4 h-4" />
+          ) : (
+            <ChevronUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
+          )}
+        </button>
       </header>
 
       {/* Favorite Input Modal - Moved outside the header to ensure proper fixed positioning */}
       {isAddingFavorite && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center animate-fade-in">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center animate-fade-in"
+          onClick={() => {
+            setIsAddingFavorite(false);
+            setFavoriteLabel('');
+          }}
+        >
           <div 
             className="bg-white rounded-lg p-6 max-w-sm w-full mx-4 animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
             style={{
               backgroundColor: interfaceStyles.backgroundColor,
               color: interfaceStyles.color

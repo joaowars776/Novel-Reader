@@ -12,17 +12,17 @@ export const formatDuration = (milliseconds: number, format: TimeFormat = 'auto'
     case 'minutes':
       return `${Math.ceil(milliseconds / (1000 * 60))} minutes`;
     
-    case 'hours':
+    case 'hours': {
       const totalHours = milliseconds / (1000 * 60 * 60);
       return `${totalHours.toFixed(1)} hours`;
-    
-    case 'detailed':
+    }
+    case 'detailed': {
       const parts: string[] = [];
       if (days > 0) parts.push(`${days} day${days !== 1 ? 's' : ''}`);
       if (hours % 24 > 0) parts.push(`${hours % 24} hour${hours % 24 !== 1 ? 's' : ''}`);
       if (minutes % 60 > 0) parts.push(`${minutes % 60} minute${minutes % 60 !== 1 ? 's' : ''}`);
       return parts.join(', ') || '0 minutes';
-    
+    }
     case 'auto':
     default:
       if (days > 0) {

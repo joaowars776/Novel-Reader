@@ -69,5 +69,22 @@ export const jaReaderInterface = {
   'showingFirstResults': '最初の',
   'resultsForOptimal': '件の結果を最適なパフォーマンスのために表示。',
   'tryMoreSpecific': '結果を絞り込むために、より具体的な検索語を使用してみてください。',
-  'foundResultsFor': 'の'
+  'foundResultsFor': 'の',
+  
+  // Shortcuts Modal translations
+  'shortcuts': 'ショートカット',
+  'action': 'アクション',
+  'shortcut': 'ショートカット',
+  'nextChapter': '次の章',
+  'previousChapter': '前の章',
+  'toggleMenu': '目次',
+  'toggleSettings': '設定',
+  'toggleFullscreen': '全画面表示',
+  'increaseFontSize': 'フォントサイズを大きく',
+  'decreaseFontSize': 'フォントサイズを小さく',
+  'close': '閉じる',
+  'totalProgress': '合計進捗',
+  'read': '既読',
+  'pdfText': 'テキスト',
+  'pdfOriginal': 'オリジナル',
 };

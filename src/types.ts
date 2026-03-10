@@ -76,6 +76,7 @@ export interface Chapter {
   content: string;
   startIndex: number;
   endIndex: number;
+  pageNumber?: number;
 }
 
 export interface Bookmark {

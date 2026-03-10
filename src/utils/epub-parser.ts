@@ -5,7 +5,7 @@ import type { Book, Chapter } from '../types';
 export class EpubParser {
   private book: any;
   private rendition: any;
-  private isDestroyed: boolean = false;
+  public isDestroyed: boolean = false;
   private searchCache: Map<string, any> = new Map();
 
   constructor(file: File) {
@@ -33,7 +33,7 @@ export class EpubParser {
 
   async getMetadata(): Promise<{ title: string; author: string; cover?: string }> {
     try {
-      if (this.isDestroyed) {
+      if (this.isDestroyed || !this.book) {
         throw new Error('Parser has been destroyed');
       }
       
@@ -84,7 +84,7 @@ export class EpubParser {
 
   async getTableOfContents(): Promise<Chapter[]> {
     try {
-      if (this.isDestroyed) {
+      if (this.isDestroyed || !this.book) {
         throw new Error('Parser has been destroyed');
       }
       
@@ -138,7 +138,7 @@ export class EpubParser {
 
   async getChapterContent(href: string): Promise<string> {
     try {
-      if (this.isDestroyed) {
+      if (this.isDestroyed || !this.book) {
         throw new Error('Parser has been destroyed');
       }
       
@@ -153,7 +153,10 @@ export class EpubParser {
         throw new Error(`Failed to load chapter content: ${href}`);
       }
       
-      return doc.innerHTML || doc.textContent || '';
+      let content = doc.innerHTML || doc.textContent || '';
+      // Remove boilerplate text requested by user
+      content = content.replace(/If audio player doesn't work, press Stop then Play button again/gi, '');
+      return content;
     } catch (error) {
       console.error('Error loading chapter content:', error);
       logError('GET_CHAPTER_CONTENT_FAILED', error, { href });
@@ -213,7 +216,6 @@ export class EpubParser {
           
           // Use a more efficient search method
           let match;
-          let searchIndex = 0;
           const maxMatches = 100; // Limit matches per chapter for performance
           
           while ((match = searchRegex.exec(content)) !== null && matches.length < maxMatches) {
@@ -275,7 +277,7 @@ export class EpubParser {
 
   async cacheCoverImage(bookId: string): Promise<void> {
     try {
-      if (this.isDestroyed) {
+      if (this.isDestroyed || !this.book) {
         throw new Error('Parser has been destroyed');
       }
       
@@ -306,14 +308,25 @@ export class EpubParser {
       // Clear search cache
       this.searchCache.clear();
       
-      if (this.book) {
-        this.book.destroy();
-        this.book = null;
+      // Destroy rendition first if it exists
+      if (this.rendition) {
+        try {
+          this.rendition.destroy();
+        } catch (e) {
+          console.warn('Error destroying rendition:', e);
+        }
+        this.rendition = null;
       }
       
-      if (this.rendition) {
-        this.rendition.destroy();
-        this.rendition = null;
+      if (this.book) {
+        try {
+          // Some internal epubjs tasks might still be running, 
+          // destroying the book should stop them.
+          this.book.destroy();
+        } catch (e) {
+          console.warn('Error destroying book:', e);
+        }
+        this.book = null;
       }
     } catch (error) {
       console.warn('Error during parser destruction:', error);

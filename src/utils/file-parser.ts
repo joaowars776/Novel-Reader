@@ -32,14 +32,14 @@ export const createBookFromSupportedFile = async (file: File): Promise<Omit<Book
   }
   
   switch (fileType) {
-    case 'epub':
+    case 'epub': {
       const epubBook = await createBookFromFile(file);
       return { ...epubBook, fileType: 'epub' };
-      
-    case 'pdf':
+    }
+    case 'pdf': {
       const pdfBook = await createBookFromPdfFile(file);
       return { ...pdfBook, fileType: 'pdf' };
-      
+    }
     default:
       throw new Error(`Unsupported file type: ${fileType}`);
   }

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Palette, Type, Monitor, Eye, EyeOff, RotateCcw, Globe, Layers, BookOpen, Settings as SettingsIcon, Volume2 } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { X, Palette, Monitor, Eye, EyeOff, RotateCcw, Globe, Layers, BookOpen, Settings as SettingsIcon, Volume2 } from 'lucide-react';
 import { COLOR_THEMES, INTERFACE_THEMES, getColorTheme, getInterfaceTheme } from '../../utils/themes';
 import { LanguageSelector } from '../LanguageSelector';
 import { getTranslation } from '../../utils/translations';
@@ -10,6 +11,7 @@ interface ReaderSettingsProps {
   preferences: ReadingPreferences;
   onPreferencesChange: (preferences: ReadingPreferences) => void;
   onClose: () => void;
+  pdfMode?: boolean;
 }
 
 // Default values for comparison
@@ -39,7 +41,8 @@ const DEFAULT_VALUES = {
 export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
   preferences,
   onPreferencesChange,
-  onClose
+  onClose,
+  pdfMode = false
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
@@ -83,7 +86,7 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
   const interfaceStyles = getInterfaceStyles();
 
   // Check if value is default
-  const isDefault = (key: string, value: any) => {
+  const isDefault = (key: string, value: unknown) => {
     if (key === 'scrollButtons') {
       return JSON.stringify(value) === JSON.stringify(DEFAULT_VALUES.scrollButtons);
     }
@@ -107,20 +110,9 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
     });
   };
 
-  const handleNestedSliderChange = (parentKey: keyof ReadingPreferences, childKey: string, value: number) => {
-    const parentObject = preferences[parentKey] as any;
-    onPreferencesChange({
-      ...preferences,
-      [parentKey]: {
-        ...parentObject,
-        [childKey]: value
-      }
-    });
-  };
-
   const handleColorThemeChange = (themeId: string) => {
     const theme = getColorTheme(themeId);
-    let updatedPreferences = {
+    const updatedPreferences = {
       ...preferences,
       selectedColorTheme: themeId,
       useThemeBasedColors: themeId !== 'custom'
@@ -144,7 +136,7 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
 
   const handleInterfaceThemeChange = (themeId: string) => {
     const theme = getInterfaceTheme(themeId);
-    let updatedPreferences = {
+    const updatedPreferences = {
       ...preferences,
       selectedInterfaceTheme: themeId
     };
@@ -339,8 +331,8 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
     ) : null
   );
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end animate-fade-in">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/50 z-[100] flex justify-end animate-fade-in backdrop-blur-sm">
       <div 
         ref={panelRef}
         className="w-full max-w-lg h-full shadow-xl overflow-hidden animate-slide-in-right flex flex-col"
@@ -433,7 +425,7 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'appearance' | 'behavior' | 'advanced')}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 text-sm font-medium transition-all duration-300 ${
                   activeTab === tab.id
                     ? 'border-b-2 border-blue-500 text-blue-600'
@@ -452,8 +444,58 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
         </div>
 
         {/* Settings Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-4 space-y-6">
+        <div className="flex-1 overflow-y-auto relative">
+          {/* PDF Mode Overlay */}
+          {pdfMode && (
+            <div 
+              className="absolute inset-0 z-50 flex flex-col items-center justify-center p-8 text-center backdrop-blur-[2px] bg-white/10"
+              style={{ backgroundColor: interfaceStyles.backgroundColor + '80' }}
+            >
+              <div 
+                className="p-6 rounded-2xl shadow-2xl border-2 max-w-xs animate-bounce-subtle"
+                style={{ 
+                  backgroundColor: interfaceStyles.backgroundColor,
+                  borderColor: '#f59e0b'
+                }}
+              >
+                <Monitor className="w-12 h-12 mx-auto mb-4 text-yellow-500" />
+                <h3 className="text-lg font-bold mb-2" style={{ color: interfaceStyles.color }}>
+                  {getTranslation('pdfSettingsBlocked')}
+                </h3>
+                <p className="text-sm opacity-80" style={{ color: interfaceStyles.color }}>
+                  {getTranslation('pdfSettingsBlockedDescription')}
+                </p>
+              </div>
+            </div>
+          )}
+          
+          <div className={`p-4 space-y-6 ${pdfMode ? 'opacity-30 pointer-events-none grayscale-[0.5]' : ''}`}>
+            {/* PDF Mode Warning */}
+            {pdfMode && (
+              <div 
+                className="p-4 rounded-lg border-l-4 mb-2 animate-fade-in"
+                style={{ 
+                  backgroundColor: '#fffbeb',
+                  borderColor: '#f59e0b',
+                  color: '#92400e'
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5">
+                    <SettingsIcon className="w-5 h-5 text-yellow-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm mb-1">
+                      {getTranslation('pdfOriginalModeActive')}
+                    </h4>
+                    <p className="text-xs leading-relaxed opacity-90">
+                      {getTranslation('pdfOriginalModeWarning')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Appearance Tab */}
             {activeTab === 'appearance' && (
               <>
@@ -509,7 +551,7 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
                             borderColor: preferences.fontFamily === font ? '#007BFF' : interfaceStyles.borderColor,
                             backgroundColor: preferences.fontFamily === font ? '#007BFF10' : 'transparent'
                           }}
-                          onClick={() => onPreferencesChange({ ...preferences, fontFamily: font as any })}
+                          onClick={() => onPreferencesChange({ ...preferences, fontFamily: font as 'Inter' | 'Georgia' | 'JetBrains Mono' })}
                         >
                           <div className="flex items-center justify-between mb-2">
                             <span className="font-medium text-sm" style={{ color: interfaceStyles.color }}>
@@ -613,7 +655,7 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
                       {['normal', 'full'].map((width) => (
                         <button
                           key={width}
-                          onClick={() => onPreferencesChange({ ...preferences, maxWidth: width as any })}
+                          onClick={() => onPreferencesChange({ ...preferences, maxWidth: width as 'normal' | 'full' })}
                           className={`p-3 rounded-lg border-2 transition-all duration-300 text-sm font-medium ${
                             preferences.maxWidth === width
                               ? 'transform scale-105'
@@ -656,7 +698,7 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
                       ].map(({ id, label, icon: Icon }) => (
                         <button
                           key={id}
-                          onClick={() => setThemeApplyMode(id as any)}
+                          onClick={() => setThemeApplyMode(id as 'both' | 'interface' | 'reader')}
                           className={`p-3 rounded-lg border-2 transition-all duration-300 text-xs font-medium flex flex-col items-center gap-1 ${
                             themeApplyMode === id ? 'transform scale-105' : 'hover:transform hover:scale-102'
                           }`}
@@ -866,7 +908,7 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
 
         {/* Reset Confirmation Modal */}
         {showResetConfirm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center animate-fade-in">
+          <div className="fixed inset-0 bg-black/50 z-[110] flex items-center justify-center animate-fade-in backdrop-blur-sm">
             <div 
               className="rounded-lg p-6 max-w-sm w-full mx-4 animate-scale-in"
               style={{
@@ -900,6 +942,7 @@ export const ReaderSettings: React.FC<ReaderSettingsProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

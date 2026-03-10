@@ -69,5 +69,22 @@ export const zhReaderInterface = {
   'showingFirstResults': '显示前',
   'resultsForOptimal': '个结果以获得最佳性能。',
   'tryMoreSpecific': '尝试使用更具体的搜索词来缩小结果范围。',
-  'foundResultsFor': '为'
+  'foundResultsFor': '为',
+  
+  // Shortcuts Modal translations
+  'shortcuts': '快捷键',
+  'action': '操作',
+  'shortcut': '快捷键',
+  'nextChapter': '下一章',
+  'previousChapter': '上一章',
+  'toggleMenu': '目录',
+  'toggleSettings': '设置',
+  'toggleFullscreen': '全屏',
+  'increaseFontSize': '增大字体',
+  'decreaseFontSize': '减小字体',
+  'close': '关闭',
+  'totalProgress': '总进度',
+  'read': '已读',
+  'pdfText': '文本',
+  'pdfOriginal': '原文',
 };

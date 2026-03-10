@@ -69,5 +69,22 @@ export const arReaderInterface = {
   'showingFirstResults': 'عرض أول',
   'resultsForOptimal': 'نتائج للأداء الأمثل.',
   'tryMoreSpecific': 'جرب استخدام مصطلحات بحث أكثر تحديداً لتضييق النتائج.',
-  'foundResultsFor': 'لـ'
+  'foundResultsFor': 'لـ',
+  
+  // Shortcuts Modal translations
+  'shortcuts': 'الاختصارات',
+  'action': 'الإجراء',
+  'shortcut': 'الاختصار',
+  'nextChapter': 'الفصل التالي',
+  'previousChapter': 'الفصل السابق',
+  'toggleMenu': 'جدول المحتويات',
+  'toggleSettings': 'الإعدادات',
+  'toggleFullscreen': 'ملء الشاشة',
+  'increaseFontSize': 'تكبير الخط',
+  'decreaseFontSize': 'تصغير الخط',
+  'close': 'إغلاق',
+  'totalProgress': 'التقدم الإجمالي',
+  'read': 'تمت القراءة',
+  'pdfText': 'نص',
+  'pdfOriginal': 'الأصلي',
 };

@@ -86,5 +86,9 @@ export const enReaderSettings = {
   'showShortcutsIcon': 'Show Shortcuts Icon', // New translation
   'settingsIconAlwaysVisible': 'Settings icon is always visible and cannot be hidden',
   'textToSpeech': 'Text-to-Speech',
-  'experimental': 'Experimental'
+  'experimental': 'Experimental',
+  'pdfOriginalModeActive': 'Original PDF Mode Active',
+  'pdfOriginalModeWarning': 'In this mode, text adjustments (font, size, line height) and reading themes do not apply to the PDF content as it is rendered in its original layout. You can still use interface themes to change the header and settings panel appearance.',
+  'pdfSettingsBlocked': 'Settings Blocked',
+  'pdfSettingsBlockedDescription': 'Text and reading settings are disabled in Original PDF mode to preserve the document\'s layout.'
 };

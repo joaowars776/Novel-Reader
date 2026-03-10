@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Palette, Monitor, Eye, EyeOff, Maximize, Heart, Volume2, Globe, RotateCcw } from 'lucide-react';
-import { INTERFACE_THEMES, COLOR_THEMES, getInterfaceTheme, getColorTheme, applyInterfaceTheme } from '../utils/themes';
+import { createPortal } from 'react-dom';
+import { X, Palette, Monitor, Globe, RotateCcw } from 'lucide-react';
+import { INTERFACE_THEMES, COLOR_THEMES, getInterfaceTheme, applyInterfaceTheme } from '../utils/themes';
 import { LanguageSelector } from './LanguageSelector';
 import { getTranslation } from '../utils/translations';
 import type { ReadingPreferences, InterfaceTheme } from '../types';
@@ -19,6 +20,7 @@ export const HomePageSettings: React.FC<HomePageSettingsProps> = ({
   const panelRef = useRef<HTMLDivElement>(null);
   const [previewTheme, setPreviewTheme] = useState<string | null>(null);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   // Close when clicking outside
   useEffect(() => {
@@ -90,51 +92,29 @@ export const HomePageSettings: React.FC<HomePageSettingsProps> = ({
     applyInterfaceTheme(currentTheme);
   };
 
-  const handleSyncToggle = (enabled: boolean) => {
-    const updatedPreferences = {
-      ...preferences,
-      syncInterfaceWithReading: enabled
-    };
-
-    if (enabled && preferences.selectedInterfaceTheme) {
-      // Sync reading theme with interface theme
-      const matchingColorTheme = COLOR_THEMES.find(
-        theme => theme.id === preferences.selectedInterfaceTheme
-      );
-      
-      if (matchingColorTheme) {
-        updatedPreferences.selectedColorTheme = matchingColorTheme.id;
-        updatedPreferences.colors = matchingColorTheme.colors;
-        updatedPreferences.useThemeBasedColors = true;
-      }
-    }
-
-    onPreferencesChange(updatedPreferences);
-  };
-
-  const handleGlobalFontToggle = (enabled: boolean) => {
-    onPreferencesChange({
-      ...preferences,
-      applyFontGlobally: enabled
-    });
-  };
-
   const handleResetToDefaults = () => {
-    if (window.confirm(getTranslation('confirmResetToDefaults'))) {
-      // Reset to default light theme
-      const defaultTheme = getInterfaceTheme('light');
-      const defaultPreferences = {
-        ...preferences,
-        selectedInterfaceTheme: 'light',
-        interfaceTheme: 'light',
-        interfaceColors: defaultTheme.colors,
-        syncInterfaceWithReading: true,
-        applyFontGlobally: false
-      };
-      
-      applyInterfaceTheme(defaultTheme);
-      onPreferencesChange(defaultPreferences);
-    }
+    setShowResetConfirm(true);
+  };
+
+  const confirmResetToDefaults = () => {
+    // Reset to default light theme
+    const defaultTheme = getInterfaceTheme('light');
+    const defaultPreferences = {
+      ...preferences,
+      selectedInterfaceTheme: 'light',
+      interfaceTheme: 'light',
+      interfaceColors: defaultTheme.colors,
+      syncInterfaceWithReading: true,
+      applyFontGlobally: false
+    };
+    
+    applyInterfaceTheme(defaultTheme);
+    onPreferencesChange(defaultPreferences);
+    setShowResetConfirm(false);
+  };
+
+  const cancelResetToDefaults = () => {
+    setShowResetConfirm(false);
   };
 
   // Theme Preview Component
@@ -285,8 +265,8 @@ export const HomePageSettings: React.FC<HomePageSettingsProps> = ({
     </div>
   );
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end animate-fade-in">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/50 z-[100] flex justify-end animate-fade-in backdrop-blur-sm">
       <div 
         ref={panelRef}
         className="w-full max-w-2xl h-full shadow-xl overflow-hidden animate-slide-in-right flex flex-col"
@@ -421,6 +401,45 @@ export const HomePageSettings: React.FC<HomePageSettingsProps> = ({
           </p>
         </div>
       </div>
-    </div>
+
+      {/* Reset Confirmation Modal */}
+      {showResetConfirm && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm">
+          <div 
+            className="w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-scale-in"
+            style={{
+              backgroundColor: interfaceStyles.backgroundColor,
+              color: interfaceStyles.color,
+              border: `1px solid ${interfaceStyles.borderColor}`
+            }}
+          >
+            <div className="p-6">
+              <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+                <RotateCcw className="w-5 h-5 text-red-500" />
+                {getTranslation('resetToDefaults')}
+              </h3>
+              <p className="mb-6 opacity-80">
+                {getTranslation('confirmResetToDefaults')}
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={cancelResetToDefaults}
+                  className="px-4 py-2 rounded-lg font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/10"
+                >
+                  {getTranslation('cancel')}
+                </button>
+                <button
+                  onClick={confirmResetToDefaults}
+                  className="px-4 py-2 rounded-lg font-medium bg-red-500 text-white hover:bg-red-600 transition-colors shadow-sm"
+                >
+                  {getTranslation('resetToDefaults')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>,
+    document.body
   );
 };
