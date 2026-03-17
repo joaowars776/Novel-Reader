@@ -1,4 +1,5 @@
 {
-  "name": "Novel Reader",
-  "description": "Novel Reader"
+  "name": "eBook Reader Pro",
+  "description": "A professional eBook reader supporting EPUB and PDF formats with reading history and statistics.",
+  "requestFramePermissions": []
 }
