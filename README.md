@@ -25,6 +25,10 @@ Thanks to browser translation (Chrome, Firefox, etc.), you can instantly read an
 ##
 ## ⚙️ Installation & Usage (necessary: NodeJS)
   # Run on Desktop:
+
+Install.bat and Start.bat inside, you just need to Install NodeJS and execute Install.bat for just one time, and after, just use the Start.run
+
+## Manual Installation:
 <pre>npm install</pre>
 <pre>npm run dev</pre>
 Access at: http://localhost:5173/
